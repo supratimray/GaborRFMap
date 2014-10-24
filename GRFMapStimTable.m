@@ -305,7 +305,7 @@ maxTargetS and a long stimLeadMS).
 		stimDesc.directionDeg = [self linearValueWithIndex:directionDegIndex count:directionDegCount min:directionDegMin max:directionDegMax];
 		
 		stimDesc.contrastPC = [self contrastValueFromIndex:contrastIndex count:contrastCount min:contrastPCMin max:contrastPCMax];
-		stimDesc.temporalFreqHz = [self logValueWithIndex:temporalFreqIndex count:temporalFreqCount min:temporalFreqHzMin max:temporalFreqHzMax];
+		stimDesc.temporalFreqHz = [self contrastValueFromIndex:temporalFreqIndex count:temporalFreqCount min:temporalFreqHzMin max:temporalFreqHzMax];
         
         stimDesc.temporalModulation = [[task defaults] integerForKey:@"GRFMapTemporalModulation"];
 		

@@ -535,7 +535,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				CONFIGURATION_BUILD_DIR = "/Library/Application Support/Knot/Plugins/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_BUILD_DIR = "~/Library/Application Support/Knot/Plugins/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 				CONFIGURATION_TEMP_DIR = "$(PROJECT_DIR)/$(BUILD_DIR)";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -586,7 +586,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				CONFIGURATION_BUILD_DIR = "/Library/Application Support/Knot/Plugins/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_BUILD_DIR = "~/Library/Application Support/Knot/Plugins/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 				CONFIGURATION_TEMP_DIR = "$(PROJECT_DIR)/$(BUILD_DIR)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"/Documents/Lablib/Frameworks/Lablib/build/**",
@@ -622,7 +622,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				CONFIGURATION_BUILD_DIR = "/Library/Application Support/Knot/Plugins/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_BUILD_DIR = "~/Library/Application Support/Knot/Plugins/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 				CONFIGURATION_TEMP_DIR = "$(PROJECT_DIR)/$(BUILD_DIR)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"/Documents/Lablib/Frameworks/Lablib/build/**",

@@ -146,6 +146,7 @@ LLDataDef stimDescDef[] = {
 	{@"float",	@"azimuthDeg", 1, offsetof(StimDesc, azimuthDeg)},
 	{@"float",	@"elevationDeg", 1, offsetof(StimDesc, elevationDeg)},
 	{@"float",	@"sigmaDeg", 1, offsetof(StimDesc, sigmaDeg)},
+    {@"float",	@"radiusDeg", 1, offsetof(StimDesc, radiusDeg)},
 	{@"float",	@"spatialFreqCPD", 1, offsetof(StimDesc, spatialFreqCPD)},
 	{@"float",	@"directionDeg", 1, offsetof(StimDesc, directionDeg)},
     {@"float",	@"temporalFreqHz", 1, offsetof(StimDesc, temporalFreqHz)},

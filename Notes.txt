@@ -18,13 +18,28 @@
 
 1. Include option to change the temporal frequency of the mapping stimuli (7th parameter). kMaxMapValues reduced to 6 otherwise the program crashes. Temporal modulation parameter is also added for mapping stimuli.
 
-% Changes made (May 22, 2013)       Supratim Ray
+% Changes made (May 22, 2013)       Supratim Ray - commit 37d183a5c6c5
 
 1. Include option to send digital codes and control reward circuit using a single ITC18.
+
+
+% Changes made (Oct 24, 2014)       Supratim Ray
+
+1. Changed the main project file such that the plugin is saved in ~/Library/Application Support/Knot
+
+2. Included the radiusDeg parameter in LLDataDef stimDescDef[] in GaborRFMap.m so that the Lablib file saves radius information also (useful for Gratings)
+
+3. Temporal Frequency values are selected in the same way as contrast. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Desired changes (22/03/13) Supratim Ray
 
 At present doneList in GRFMapStimTable is maintained as a 6-D array with kMaxMapValues = 8 entires per dimension, which needs 8^6 bytes. If fewer number of entries are used per parameter (say numAzi=1), we are unnecessarily dealing with a large and sparse matrix. Instead, this list should be constructed dynamically (7-D array of size numAzi*numEle*numSigma*numSF*numOri*numCon*numTF). This will allow us to increase the number of possible entries (kMaxMapValues) as long as all the parameters are not large simultaneously.
+
+% Desired changes (17/10/14) Supratim Ray
+
+The digital codes change very fast (< 1 ms), due to which sampling rate needs ot be very high. While it is fine for Blackrock, we need to slow down the digital codes while using EEG recording system for which the sampling rate is unlikely to exceed 1 kHz. The basic digital codes that are sent by default (even when stimulus specific codes are not sent) should be extended.
+
+The protocol should generate auditory stimuli in addition to visual stimuli. The contrast and temporal frequency of the right visual stimulus should control the volume and type of auditory stimulus. Separate digital codes need to be sent for the auditory stimulus.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
