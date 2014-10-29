@@ -27,6 +27,74 @@
 	[super dealloc];
 }
 
+- (NSString *)digitalCodeDictionary:(NSString *)eventName;
+{
+    NSString *thisEventName = nil;
+    
+    if ([eventName isEqualTo:@"attendLoc"] || [eventName isEqualTo:@"AL"] )
+        thisEventName = @"AL";
+    else if ([eventName isEqualTo:@"azimuth"] || [eventName isEqualTo:@"AZ"] )
+        thisEventName = @"AZ";
+    else if ([eventName isEqualTo:@"break"] || [eventName isEqualTo:@"BR"] )
+        thisEventName = @"BR";
+    else if ([eventName isEqualTo:@"contrast"] || [eventName isEqualTo:@"CO"] )
+        thisEventName = @"CO";
+    else if ([eventName isEqualTo:@"catchTrial"] || [eventName isEqualTo:@"CT"] )
+        thisEventName = @"CT";
+    else if ([eventName isEqualTo:@"eccentricity"] || [eventName isEqualTo:@"EC"] )
+        thisEventName = @"EC";
+    else if ([eventName isEqualTo:@"elevation"] || [eventName isEqualTo:@"EL"] )
+        thisEventName = @"EL";
+    else if ([eventName isEqualTo:@"fixate"] || [eventName isEqualTo:@"FI"] )
+        thisEventName = @"FI";
+    else if ([eventName isEqualTo:@"fixOn"] || [eventName isEqualTo:@"FO"] )
+        thisEventName = @"FO";
+    else if ([eventName isEqualTo:@"instructTrial"] || [eventName isEqualTo:@"IT"] )
+        thisEventName = @"IT";
+    else if ([eventName isEqualTo:@"mapping0"] || [eventName isEqualTo:@"M0"] )
+        thisEventName = @"M0";
+    else if ([eventName isEqualTo:@"mapping1"] || [eventName isEqualTo:@"M1"] )
+        thisEventName = @"M1";
+    else if ([eventName isEqualTo:@"stimulusOn"] || [eventName isEqualTo:@"ON"] )
+        thisEventName = @"ON";
+    else if ([eventName isEqualTo:@"stimulusOff"] || [eventName isEqualTo:@"OF"] )
+        thisEventName = @"OF";
+    else if ([eventName isEqualTo:@"orientation"] || [eventName isEqualTo:@"OR"] )
+        thisEventName = @"OR";
+    else if ([eventName isEqualTo:@"polarAngle"] || [eventName isEqualTo:@"PA"] )
+        thisEventName = @"PA";
+    else if ([eventName isEqualTo:@"radius"] || [eventName isEqualTo:@"RA"] )
+        thisEventName = @"RA";
+    else if ([eventName isEqualTo:@"saccade"] || [eventName isEqualTo:@"SA"] )
+        thisEventName = @"SA";
+    else if ([eventName isEqualTo:@"spatialFreq"] || [eventName isEqualTo:@"SF"] )
+        thisEventName = @"SF";
+    else if ([eventName isEqualTo:@"sigma"] || [eventName isEqualTo:@"SI"] )
+        thisEventName = @"SI";
+    else if ([eventName isEqualTo:@"stimType"] || [eventName isEqualTo:@"ST"] )
+        thisEventName = @"ST";
+    else if ([eventName isEqualTo:@"trialCertify"] || [eventName isEqualTo:@"TC"] )
+        thisEventName = @"TC";
+    else if ([eventName isEqualTo:@"trialEnd"] || [eventName isEqualTo:@"TE"] )
+        thisEventName = @"TE";
+    else if ([eventName isEqualTo:@"temporalFreq"] || [eventName isEqualTo:@"TF"] )
+        thisEventName = @"TF";
+    else if ([eventName isEqualTo:@"taskGabor"] || [eventName isEqualTo:@"TG"] )
+        thisEventName = @"TG";
+    else if ([eventName isEqualTo:@"trialStart"] || [eventName isEqualTo:@"TS"] )
+        thisEventName = @"TS";
+    else if ([eventName isEqualTo:@"type0"] || [eventName isEqualTo:@"T0"] )
+        thisEventName = @"T0";
+    else if ([eventName isEqualTo:@"type1"] || [eventName isEqualTo:@"T1"] )
+        thisEventName = @"T1";
+    else
+        NSRunAlertPanel(@"GRFDigitalOut",  @"Can't find digital event named \"%@\".",
+                        @"OK", nil, nil, eventName);
+    
+    
+    return thisEventName;
+}
+
 - (int)getDigitalValue:(NSString *)eventName;
 {
     int val, val0, val1;
@@ -103,6 +171,12 @@
 
 - (BOOL)outputEventName:(NSString *)eventName withData:(long)data;
 {
+    [self outputEventName:eventName withData:data sleepInMicrosec:0];
+    return YES;
+}
+
+- (BOOL)outputEventName:(NSString *)eventName withData:(long)data sleepInMicrosec:(int)sleepTimeInMicrosec;
+{
     NSString *thisEventName;
 	BOOL useSingleITC18;
     
@@ -111,66 +185,7 @@
 	}
 	[lock lock];
 	
-	if ([eventName isEqualTo:@"attendLoc"] || [eventName isEqualTo:@"AL"] )
-        thisEventName = @"AL";
-	else if ([eventName isEqualTo:@"azimuth"] || [eventName isEqualTo:@"AZ"] )
-		thisEventName = @"AZ";
-	else if ([eventName isEqualTo:@"break"] || [eventName isEqualTo:@"BR"] )
-		thisEventName = @"BR";
-	else if ([eventName isEqualTo:@"contrast"] || [eventName isEqualTo:@"CO"] )
-		thisEventName = @"CO";
-	else if ([eventName isEqualTo:@"catchTrial"] || [eventName isEqualTo:@"CT"] )
-		thisEventName = @"CT";
-	else if ([eventName isEqualTo:@"eccentricity"] || [eventName isEqualTo:@"EC"] )
-		thisEventName = @"EC";
-	else if ([eventName isEqualTo:@"elevation"] || [eventName isEqualTo:@"EL"] )
-		thisEventName = @"EL";
-	else if ([eventName isEqualTo:@"fixate"] || [eventName isEqualTo:@"FI"] )
-		thisEventName = @"FI";
-	else if ([eventName isEqualTo:@"fixOn"] || [eventName isEqualTo:@"FO"] )
-		thisEventName = @"FO";
-	else if ([eventName isEqualTo:@"instructTrial"] || [eventName isEqualTo:@"IT"] )
-		thisEventName = @"IT";
-	else if ([eventName isEqualTo:@"mapping0"] || [eventName isEqualTo:@"M0"] )
-		thisEventName = @"M0";
-	else if ([eventName isEqualTo:@"mapping1"] || [eventName isEqualTo:@"M1"] )
-		thisEventName = @"M1";
-	else if ([eventName isEqualTo:@"stimulusOn"] || [eventName isEqualTo:@"ON"] )
-		thisEventName = @"ON";
-	else if ([eventName isEqualTo:@"stimulusOff"] || [eventName isEqualTo:@"OF"] )
-		thisEventName = @"OF";
-	else if ([eventName isEqualTo:@"orientation"] || [eventName isEqualTo:@"OR"] )
-		thisEventName = @"OR";
-	else if ([eventName isEqualTo:@"polarAngle"] || [eventName isEqualTo:@"PA"] )
-		thisEventName = @"PA";
-	else if ([eventName isEqualTo:@"radius"] || [eventName isEqualTo:@"RA"] )
-		thisEventName = @"RA";
-	else if ([eventName isEqualTo:@"saccade"] || [eventName isEqualTo:@"SA"] )
-		thisEventName = @"SA";
-	else if ([eventName isEqualTo:@"spatialFreq"] || [eventName isEqualTo:@"SF"] )
-		thisEventName = @"SF";
-	else if ([eventName isEqualTo:@"sigma"] || [eventName isEqualTo:@"SI"] )
-		thisEventName = @"SI";
-	else if ([eventName isEqualTo:@"stimType"] || [eventName isEqualTo:@"ST"] )
-		thisEventName = @"ST";
-	else if ([eventName isEqualTo:@"trialCertify"] || [eventName isEqualTo:@"TC"] )
-		thisEventName = @"TC";
-	else if ([eventName isEqualTo:@"trialEnd"] || [eventName isEqualTo:@"TE"] )
-		thisEventName = @"TE";
-	else if ([eventName isEqualTo:@"temporalFreq"] || [eventName isEqualTo:@"TF"] )
-		thisEventName = @"TF";
-	else if ([eventName isEqualTo:@"taskGabor"] || [eventName isEqualTo:@"TG"] )
-		thisEventName = @"TG";
-    else if ([eventName isEqualTo:@"trialStart"] || [eventName isEqualTo:@"TS"] )
-		thisEventName = @"TS";
-	else if ([eventName isEqualTo:@"type0"] || [eventName isEqualTo:@"T0"] )
-		thisEventName = @"T0";
-	else if ([eventName isEqualTo:@"type1"] || [eventName isEqualTo:@"T1"] )
-		thisEventName = @"T1";
-	else
-		NSRunAlertPanel(@"GRFDigitalOut",  @"Can't find digital event named \"%@\".",
-						@"OK", nil, nil, eventName);
-	
+    thisEventName = [self digitalCodeDictionary:eventName];
     useSingleITC18 = [[task defaults] boolForKey:GRFUseSingleITC18Key];
     
     if (useSingleITC18) {
@@ -180,11 +195,19 @@
         if ((data>8192) || (data<-8192)) {
             NSLog(@"Event: %@, actual dat val: %ld is out of range, val sent: %ld",thisEventName,data, (2*data+1 & 0x7fff));
         }
+        if (sleepTimeInMicrosec>0)
+            usleep(sleepTimeInMicrosec);
         [[task dataController] digitalOutputBits:((2*data+1) & 0x7fff)];
+        if (sleepTimeInMicrosec>0)
+            usleep(sleepTimeInMicrosec);
 	}
     else {
         [digitalOutDevice digitalOutputBits:[self getDigitalValue:thisEventName]];
+        if (sleepTimeInMicrosec>0)
+            usleep(sleepTimeInMicrosec);
         [digitalOutDevice digitalOutputBits:(data & 0x7fff)];
+        if (sleepTimeInMicrosec>0)
+            usleep(sleepTimeInMicrosec);
     }
 	[lock unlock];
 //	NSLog(@"Digital out %ld %ld", (event | 0x8000), (data & 0x7fff));

@@ -23,13 +23,19 @@
 1. Include option to send digital codes and control reward circuit using a single ITC18.
 
 
-% Changes made (Oct 24, 2014)       Supratim Ray
+% Changes made (Oct 24, 2014)       Supratim Ray - commit dba3829d035f
 
 1. Changed the main project file such that the plugin is saved in ~/Library/Application Support/Knot
 
 2. Included the radiusDeg parameter in LLDataDef stimDescDef[] in GaborRFMap.m so that the Lablib file saves radius information also (useful for Gratings)
 
 3. Temporal Frequency values are selected in the same way as contrast. 
+
+
+% Changes made (Oct 29, 2014)       Supratim Ray
+
+The digital codes change very fast (< 1 ms), due to which sampling rate needs ot be very high. While it is fine for Blackrock, we need to slow down the digital codes while using EEG recording system for which the sampling rate is unlikely to exceed 1 kHz. We extend two digital codes - TrialStart and TrialEnd by introducing a delay, so that they can be captured even at 1 kHz.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Desired changes (22/03/13) Supratim Ray
@@ -38,7 +44,7 @@ At present doneList in GRFMapStimTable is maintained as a 6-D array with kMaxMap
 
 % Desired changes (17/10/14) Supratim Ray
 
-The digital codes change very fast (< 1 ms), due to which sampling rate needs ot be very high. While it is fine for Blackrock, we need to slow down the digital codes while using EEG recording system for which the sampling rate is unlikely to exceed 1 kHz. The basic digital codes that are sent by default (even when stimulus specific codes are not sent) should be extended.
+When running in fixation mode, the task stimulus duration and inter-stimulus intervals should be automatically set to the mapping stimulus duration and ISI.
 
 The protocol should generate auditory stimuli in addition to visual stimuli. The contrast and temporal frequency of the right visual stimulus should control the volume and type of auditory stimulus. Separate digital codes need to be sent for the auditory stimulus.
 

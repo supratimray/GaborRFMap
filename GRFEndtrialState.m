@@ -45,7 +45,7 @@
     [[task dataDoc] putEvent:@"trialCertify" withData:(void *)&trialCertify];
     [digitalOut outputEventName:@"trialCertify" withData:(long)(trialCertify)];
 	[[task dataDoc] putEvent:@"trialEnd" withData:(void *)&eotCode];
-    [digitalOut outputEventName:@"trialEnd" withData:(long)(eotCode)];
+    [digitalOut outputEventName:@"trialEnd" withData:(long)(eotCode) sleepInMicrosec:kSleepInMicrosec];
     
 	expireTime = [LLSystemUtil timeFromNow:0];					// no delay, except for breaks (below)
 	switch (eotCode) {
