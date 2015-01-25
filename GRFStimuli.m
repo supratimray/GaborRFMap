@@ -36,6 +36,7 @@ NSString *stimulusMonitorID = @"GaborRFMap Stimulus";
 	[fixSpot release];
     [targetSpot release];
     [gabors release];
+    [plaid release];
 
     [super dealloc];
 }
@@ -100,7 +101,9 @@ NSString *stimulusMonitorID = @"GaborRFMap Stimulus";
 	[fixSpot bindValuesToKeysWithPrefix:@"GRFFix"];
     targetSpot = [[LLFixTarget alloc] init];
 	//[targetSpot bindValuesToKeysWithPrefix:@"GRFFix"];
-
+    
+    [self initPlaid:NO];
+    [plaid setAchromatic:YES];
 
 	return self;
 }
@@ -122,6 +125,24 @@ NSString *stimulusMonitorID = @"GaborRFMap Stimulus";
     }
 	[gabor bindValuesToKeysWithPrefix:[NSString stringWithFormat:@"GRF%ld", counter++]];
 	return gabor;
+}
+
+- (LLPlaid *)initPlaid:(BOOL)bindTemporalFreq;
+{
+//    LLPlaid *plaid;
+    
+    plaid = [[LLPlaid alloc] init];				// Create a plaid stimulus
+    [plaid setDisplays:[[task stimWindow] displays] displayIndex:[[task stimWindow] displayIndex]];
+    if (bindTemporalFreq) {
+        [plaid removeKeysFromBinding:[NSArray arrayWithObjects:LLPlaid0DirectionDegKey, LLPlaid1DirectionDegKey,
+                                      LLPlaid0TemporalPhaseDegKey, LLPlaid1TemporalPhaseDegKey, LLPlaid0ContrastKey, LLPlaid1ContrastKey, LLPlaid0SpatialPhaseDegKey, LLPlaid1SpatialPhaseDegKey, nil]];
+    }
+    else {
+        [plaid removeKeysFromBinding:[NSArray arrayWithObjects:LLPlaid0DirectionDegKey, LLPlaid1DirectionDegKey,
+                                      LLPlaid0TemporalPhaseDegKey, LLPlaid1TemporalPhaseDegKey, LLPlaid0ContrastKey, LLPlaid1ContrastKey, LLPlaid0SpatialPhaseDegKey, LLPlaid1SpatialPhaseDegKey, LLPlaid0TemporalFreqHzKey, LLPlaid1TemporalFreqHzKey, nil]];
+    }
+    [plaid bindValuesToKeysWithPrefix:[NSString stringWithFormat:@"GRF"]];
+    return plaid;
 }
 
 /*
@@ -259,6 +280,33 @@ by mapStimTable.
     [gabor setTemporalModulation:pSD->temporalModulation];
 }
 
+- (void)loadPlaid:(LLPlaid *)pld withStimDesc0:(StimDesc *)pSD0 withStimDesc1:(StimDesc *)pSD1;
+{
+    
+    [pld directSetSigmaDeg:pSD0->sigmaDeg];
+    [pld directSetRadiusDeg:pSD0->radiusDeg];
+    [pld directSetAzimuthDeg:pSD0->azimuthDeg elevationDeg:pSD0->elevationDeg];
+    
+    if (pSD0->spatialFreqCPD == 0) {
+        [pld directSetSpatialPhaseDeg0:90.0];
+    }
+    [pld directSetSpatialFreqCPD0:pSD0->spatialFreqCPD];
+    [pld setDirectionDeg0:pSD0->directionDeg];
+    [pld directSetContrast0:pSD0->contrastPC / 100.0];
+    [pld directSetTemporalFreqHz0:pSD0->temporalFreqHz];
+    [pld setTemporalModulation0:pSD0->temporalModulation];
+    
+    if (pSD1->spatialFreqCPD == 0) {
+        [pld directSetSpatialPhaseDeg1:90.0];
+    }
+    [pld directSetSpatialFreqCPD1:pSD1->spatialFreqCPD];
+    [pld setDirectionDeg1:pSD1->directionDeg];
+    [pld directSetContrast1:pSD1->contrastPC / 100.0];
+    [pld directSetTemporalFreqHz1:pSD1->temporalFreqHz];
+    [pld setTemporalModulation1:pSD1->temporalModulation];
+}
+
+
 - (void)clearStimLists:(TrialDesc *)pTrial
 {
 	// tally stim lists first?
@@ -294,6 +342,7 @@ by mapStimTable.
 	BOOL listDone = NO;
 //	long stimCounter = 0;
     BOOL useSingleITC18;
+    BOOL convertToPlaid;
 	
     threadPool = [[NSAutoreleasePool alloc] init];		// create a threadPool for this thread
 	[LLSystemUtil setThreadPriorityPeriodMS:1.0 computationFraction:0.250 constraintFraction:1.0];
@@ -307,8 +356,7 @@ by mapStimTable.
 	[[task stimWindow] scaleDisplay];
 
 // Set up the gabors
-
-	[gabors makeObjectsPerformSelector:@selector(store)];
+    
 	for (index = 0; index < kGabors; index++) {
 		stimIndices[index] = 0;
 		gaborFrames[index] = 0;
@@ -316,6 +364,20 @@ by mapStimTable.
 		[self loadGabor:[gabors objectAtIndex:index] withStimDesc:&stimDescs[index]];
 		stimOffFrames[index] = stimDescs[index].stimOffFrame;
 	}
+
+// Set up the plaid if necessary
+// Instead of showing two gabors, we can "merge" them together and draw a plaid. In that situation, the azimuth, elevation, sigma and radius of MappingGabor0 are used. We simply set the stimTypes of kMapGabor0 and kMapGabor1 to Null so that they are not displayed, and set up the plaid instead. Plaid uses stimOn, stimOff and Frame number (see below) of MappingGabor0.
+    
+    convertToPlaid = [[task defaults] boolForKey:GRFConvertToPlaidKey];
+
+    if (convertToPlaid) {
+        [self loadPlaid:plaid withStimDesc0:&stimDescs[kMapGabor0] withStimDesc1:&stimDescs[kMapGabor1]];
+        stimDescs[kMapGabor0].stimType=kNullStim;
+        stimDescs[kMapGabor1].stimType=kNullStim;
+    }
+    
+    [gabors makeObjectsPerformSelector:@selector(store)];
+    [plaid store];
     
     // Set up the targetSpot if needed
 /*
@@ -348,6 +410,15 @@ by mapStimTable.
                 }
 			}
 		}
+        
+        if (convertToPlaid) {
+            if (trialFrame >= stimDescs[kMapGabor0].stimOnFrame && trialFrame < stimDescs[kMapGabor0].stimOffFrame) {
+                [plaid directSetFrame:[NSNumber numberWithLong:gaborFrames[kMapGabor0]]];	// advance for temporal modulation
+                [plaid draw];
+                gaborFrames[kMapGabor0]++;
+            }
+        }
+        
 		[fixSpot draw];
 		[[NSOpenGLContext currentContext] flushBuffer];
 		glFinish();
@@ -442,9 +513,19 @@ by mapStimTable.
 			if (trialFrame == stimOffFrames[index] - 1) {
 				if ((stimIndices[index] + 1) < [[stimLists objectAtIndex:index] count]) {	// check there are more
 					[[[stimLists objectAtIndex:index] objectAtIndex:(stimIndices[index] + 1)] getValue:&stimDescs[index]];
-				[self loadGabor:[gabors objectAtIndex:index] withStimDesc:&stimDescs[index]];
+                    [self loadGabor:[gabors objectAtIndex:index] withStimDesc:&stimDescs[index]];
 					gaborFrames[index] = 0;
+                    
+                    if (convertToPlaid) {
+                        [self loadPlaid:plaid withStimDesc0:&stimDescs[kMapGabor0] withStimDesc1:&stimDescs[kMapGabor1]];
+                        stimDescs[kMapGabor0].stimType=kNullStim;
+                        stimDescs[kMapGabor1].stimType=kNullStim;
+                    }
 				}
+             
+                // Every time fresh gabors are selected, we need to store them because otherwise counterphasing option would keep using the baseGabor of the first gabor.
+                [gabors makeObjectsPerformSelector:@selector(store)];
+                [plaid store];
 			}
 		}
     }
@@ -462,8 +543,11 @@ by mapStimTable.
 	[[task stimWindow] unlock];
 	
 // The temporal counterphase might have changed some settings.  We restore these here.
-
-	[gabors makeObjectsPerformSelector:@selector(restore)];
+// No need to restore, because Gabors are loaded and stored fresh in each trial.
+    
+//	[gabors makeObjectsPerformSelector:@selector(restore)];
+//  [plaid restore];
+    
 	stimulusOn = abortStimuli = NO;
 	[stimLists release];
     [threadPool release];

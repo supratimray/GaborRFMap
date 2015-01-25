@@ -86,6 +86,8 @@ NSString *GRFHideTaskGaborKey = @"GRFHideTaskGabor";
 NSString *GRFIncludeCatchTrialsinDoneListKey = @"GRFIncludeCatchTrialsinDoneList";
 NSString *GRFMapTemporalModulationKey = @"GRFMapTemporalModulation";
 
+NSString *GRFConvertToPlaidKey = @"GRFConvertToPlaid";
+
 // Visual Stimulus Parameters 
 
 NSString *GRFSpatialPhaseDegKey = @"GRFSpatialPhaseDeg";

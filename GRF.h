@@ -243,6 +243,8 @@ extern NSString *GRFHideTaskGaborKey;
 extern NSString *GRFIncludeCatchTrialsinDoneListKey;
 extern NSString *GRFMapTemporalModulationKey;
 
+extern NSString *GRFConvertToPlaidKey;
+
 long		argRand;
 
 #import "GRFStimuli.h"

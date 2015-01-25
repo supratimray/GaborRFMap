@@ -27,6 +27,7 @@ GRFStimuli.h
     TrialDesc               trial;
     LLFixTarget				*targetSpot;
 //	LLGabor 				*taskGabor;
+    LLPlaid                 *plaid;
 }
 
 - (void)doFixSettings;
@@ -38,7 +39,9 @@ GRFStimuli.h
 - (LLGabor *)mappingGabor1;
 - (LLGabor *)taskGabor;
 - (LLGabor *)initGabor:(BOOL)bindTemporalFreq;
+- (LLPlaid *)initPlaid:(BOOL)bindTemporalFreq;
 - (void)loadGabor:(LLGabor *)gabor withStimDesc:(StimDesc *)pSD;
+- (void)loadPlaid:(LLPlaid *)plaid withStimDesc0:(StimDesc *)pSD0 withStimDesc1:(StimDesc *)pSD1;
 - (void)makeStimLists:(TrialDesc *)pTrial;
 - (void)clearStimLists:(TrialDesc *)pTrial;
 - (LLIntervalMonitor *)monitor;
