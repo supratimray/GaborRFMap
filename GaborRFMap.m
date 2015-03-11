@@ -88,6 +88,8 @@ NSString *GRFMapTemporalModulationKey = @"GRFMapTemporalModulation";
 
 NSString *GRFConvertToPlaidKey = @"GRFConvertToPlaid";
 
+NSString *GRFLinearTFRangeKey = @"GRFLinearTFRange";
+
 // Visual Stimulus Parameters 
 
 NSString *GRFSpatialPhaseDegKey = @"GRFSpatialPhaseDeg";
