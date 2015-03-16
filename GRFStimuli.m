@@ -278,6 +278,10 @@ by mapStimTable.
 	[gabor directSetContrast:pSD->contrastPC / 100.0];
     [gabor directSetTemporalFreqHz:pSD->temporalFreqHz];
     [gabor setTemporalModulation:pSD->temporalModulation];
+    
+    if (pSD->temporalFreqHz == [[task stimWindow] frameRateHz]/2) {
+        [gabor directSetTemporalPhaseDeg:90.0];
+    }
 }
 
 - (void)loadPlaid:(LLPlaid *)pld withStimDesc0:(StimDesc *)pSD0 withStimDesc1:(StimDesc *)pSD1;
@@ -296,6 +300,10 @@ by mapStimTable.
     [pld directSetTemporalFreqHz0:pSD0->temporalFreqHz];
     [pld setTemporalModulation0:pSD0->temporalModulation];
     
+    if (pSD0->temporalFreqHz == [[task stimWindow] frameRateHz]/2) {
+        [pld directSetTemporalPhaseDeg0:90.0];
+    }
+    
     if (pSD1->spatialFreqCPD == 0) {
         [pld directSetSpatialPhaseDeg1:90.0];
     }
@@ -304,6 +312,10 @@ by mapStimTable.
     [pld directSetContrast1:pSD1->contrastPC / 100.0];
     [pld directSetTemporalFreqHz1:pSD1->temporalFreqHz];
     [pld setTemporalModulation1:pSD1->temporalModulation];
+    
+    if (pSD1->temporalFreqHz == [[task stimWindow] frameRateHz]/2) {
+        [pld directSetTemporalPhaseDeg1:90.0];
+    }
 }
 
 
@@ -472,6 +484,10 @@ by mapStimTable.
 							[digitalOut outputEventName:@"mapping1" withData:(long)(pSD->stimType)];
 					}
 				}
+                
+                if (convertToPlaid) {
+                    [digitalOut outputEventName:@"mappingPlaid" withData:(long)(pSD->stimType)];
+                }
 				
 				// Other prperties of the Gabor
 				if (index == kMapGabor0 && pSD->stimType != kNullStim && !([[task defaults] boolForKey:GRFHideLeftDigitalKey])) {

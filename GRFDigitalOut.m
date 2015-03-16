@@ -55,6 +55,8 @@
         thisEventName = @"M0";
     else if ([eventName isEqualTo:@"mapping1"] || [eventName isEqualTo:@"M1"] )
         thisEventName = @"M1";
+    else if ([eventName isEqualTo:@"mappingPlaid"] || [eventName isEqualTo:@"MP"] )
+        thisEventName = @"MP";
     else if ([eventName isEqualTo:@"stimulusOn"] || [eventName isEqualTo:@"ON"] )
         thisEventName = @"ON";
     else if ([eventName isEqualTo:@"stimulusOff"] || [eventName isEqualTo:@"OF"] )

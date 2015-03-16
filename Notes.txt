@@ -32,10 +32,17 @@
 3. Temporal Frequency values are selected in the same way as contrast. 
 
 
-% Changes made (Oct 29, 2014)       Supratim Ray - commit 4bf900bc341d
+% Changes made (Oct 29, 2014)       Supratim Ray - commit bf815d6f3d36
 
 The digital codes change very fast (< 1 ms), due to which sampling rate needs ot be very high. While it is fine for Blackrock, we need to slow down the digital codes while using EEG recording system for which the sampling rate is unlikely to exceed 1 kHz. We extend two digital codes - TrialStart and TrialEnd by introducing a delay, so that they can be captured even at 1 kHz.
 
+% Changes made (Jan 25, 2015)       Supratim Ray - commit 4bf900bc341d
+
+Adding option to convert the stimuli into a plaid. Right now the plaid only works when set to counterphasing, but not drifting.
+
+% Changes made (Mar 16, 2015)       Supratim Ray -
+
+Added digital codes for plaids. Also, temporal frequency is set to a maximum of frameRateHz/2, and when it takes that value, the temporal phase is set to 90 degrees.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Desired changes (22/03/13) Supratim Ray
@@ -47,9 +54,5 @@ At present doneList in GRFMapStimTable is maintained as a 6-D array with kMaxMap
 When running in fixation mode, the task stimulus duration and inter-stimulus intervals should be automatically set to the mapping stimulus duration and ISI.
 
 The protocol should generate auditory stimuli in addition to visual stimuli. The contrast and temporal frequency of the right visual stimulus should control the volume and type of auditory stimulus. Separate digital codes need to be sent for the auditory stimulus.
-
-% Desired changes (19/01/15) Supratim Ray
-
-Adding option to convert the stimuli into a plaid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -307,6 +307,10 @@ maxTargetS and a long stimLeadMS).
 		stimDesc.contrastPC = [self contrastValueFromIndex:contrastIndex count:contrastCount min:contrastPCMin max:contrastPCMax];
 		stimDesc.temporalFreqHz = [self contrastValueFromIndex:temporalFreqIndex count:temporalFreqCount min:temporalFreqHzMin max:temporalFreqHzMax];
         
+        if (stimDesc.temporalFreqHz>=frameRateHz/2) {
+            stimDesc.temporalFreqHz=frameRateHz/2;
+        }
+        
         stimDesc.temporalModulation = [[task defaults] integerForKey:@"GRFMapTemporalModulation"];
 		
 		// Unused field

@@ -32,7 +32,7 @@ enum {  kTrialStartDigitOutCode = 0x0010,
         kSaccadeDigitOutCode = 0x0060,
         kTrialEndDigitOutCode = 0x0070};
 
-#define	kSleepInMicrosec	2000
+#define	kSleepInMicrosec	5000
 #define	kMaxOriChanges      12
 #define kMaxMapValues       6
 
