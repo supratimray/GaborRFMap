@@ -303,6 +303,8 @@
 	<real>180</real>
 	<key>GRFKdlThetaDeg</key>
 	<real>90</real>
+	<key>GRFLinearTFRange</key>
+	<false/>
 	<key>GRFMapTemporalModulation</key>
 	<integer>1</integer>
 	<key>GRFMaxContrast</key>

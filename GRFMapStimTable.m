@@ -130,7 +130,7 @@ maxTargetS and a long stimLeadMS).
 	int localFreshCount;
 	BOOL localList[kMaxMapValues][kMaxMapValues][kMaxMapValues][kMaxMapValues][kMaxMapValues][kMaxMapValues][kMaxMapValues];
 	float azimuthDegMin, azimuthDegMax, elevationDegMin, elevationDegMax, sigmaDegMin, sigmaDegMax, spatialFreqCPDMin, spatialFreqCPDMax, directionDegMin, directionDegMax, radiusSigmaRatio, contrastPCMin, contrastPCMax, temporalFreqHzMin, temporalFreqHzMax;
-	BOOL hideStimulus, convertToGrating;
+	BOOL hideStimulus, convertToGrating, linearTFRange;
     
 	NSArray *stimTableDefaults = [[task defaults] arrayForKey:@"GRFStimTables"];
 	NSDictionary *minDefaults = [stimTableDefaults objectAtIndex:0];
@@ -181,6 +181,7 @@ maxTargetS and a long stimLeadMS).
 	}
     
     convertToGrating = [[task defaults] boolForKey:GRFConvertToGratingKey];
+    linearTFRange = [[task defaults] boolForKey:GRFLinearTFRangeKey];
 	
 	memcpy(&localList, &doneList, sizeof(doneList));
 	localFreshCount = stimRemainingInBlock;
@@ -305,7 +306,12 @@ maxTargetS and a long stimLeadMS).
 		stimDesc.directionDeg = [self linearValueWithIndex:directionDegIndex count:directionDegCount min:directionDegMin max:directionDegMax];
 		
 		stimDesc.contrastPC = [self contrastValueFromIndex:contrastIndex count:contrastCount min:contrastPCMin max:contrastPCMax];
-		stimDesc.temporalFreqHz = [self contrastValueFromIndex:temporalFreqIndex count:temporalFreqCount min:temporalFreqHzMin max:temporalFreqHzMax];
+        if (linearTFRange) { // Temporal frequency increases linearly from min to max
+            stimDesc.temporalFreqHz = [self linearValueWithIndex:temporalFreqIndex count:temporalFreqCount min:temporalFreqHzMin max:temporalFreqHzMax];
+        }
+        else {
+            stimDesc.temporalFreqHz = [self contrastValueFromIndex:temporalFreqIndex count:temporalFreqCount min:temporalFreqHzMin max:temporalFreqHzMax];
+        }
         
         if (stimDesc.temporalFreqHz>=frameRateHz/2) {
             stimDesc.temporalFreqHz=frameRateHz/2;
