@@ -131,12 +131,15 @@ maxTargetS and a long stimLeadMS).
 	int localFreshCount;
 	CFMutableBitVectorRef localList;
 	float azimuthDegMin, azimuthDegMax, elevationDegMin, elevationDegMax, sigmaDegMin, sigmaDegMax, spatialFreqCPDMin, spatialFreqCPDMax, directionDegMin, directionDegMax, radiusSigmaRatio, contrastPCMin, contrastPCMax, temporalFreqHzMin, temporalFreqHzMax;
-	BOOL hideStimulus, convertToGrating, linearTFRange;
+	BOOL hideStimulus, convertToGrating;
+    BOOL sigmaLog, spatialFreqLog, contrastLog, temporalFreqLog;
     
 	NSArray *stimTableDefaults = [[task defaults] arrayForKey:@"GRFStimTables"];
+    NSArray *stimTableRangeTypeDefaults = [[task defaults] arrayForKey:@"GRFStimTableRangeTypes"];
 	NSDictionary *minDefaults = [stimTableDefaults objectAtIndex:0];
 	NSDictionary *maxDefaults = [stimTableDefaults objectAtIndex:1];
-	
+    NSDictionary *rangeDefaults = [stimTableRangeTypeDefaults objectAtIndex:0];
+    
 	radiusSigmaRatio = [[[task defaults] objectForKey:GRFMapStimRadiusSigmaRatioKey] floatValue];
 	
     switch (index) {
@@ -158,6 +161,11 @@ maxTargetS and a long stimLeadMS).
             contrastPCMax = [[maxDefaults objectForKey:@"contrastPC0"] floatValue];
             temporalFreqHzMax = [[maxDefaults objectForKey:@"temporalFreqHz0"] floatValue];
             
+            sigmaLog = [[rangeDefaults objectForKey:@"sigmaLog0"] boolValue];
+            spatialFreqLog = [[rangeDefaults objectForKey:@"spatialFreqLog0"] boolValue];
+            contrastLog = [[rangeDefaults objectForKey:@"contrastLog0"] boolValue];
+            temporalFreqLog = [[rangeDefaults objectForKey:@"temporalFreqLog0"] boolValue];
+            
             hideStimulus = [[task defaults] boolForKey:GRFHideLeftKey];
             break;
         case 1:
@@ -177,12 +185,16 @@ maxTargetS and a long stimLeadMS).
             contrastPCMax = [[maxDefaults objectForKey:@"contrastPC1"] floatValue];
             temporalFreqHzMax = [[maxDefaults objectForKey:@"temporalFreqHz1"] floatValue];
             
+            sigmaLog = [[rangeDefaults objectForKey:@"sigmaLog1"] boolValue];
+            spatialFreqLog = [[rangeDefaults objectForKey:@"spatialFreqLog1"] boolValue];
+            contrastLog = [[rangeDefaults objectForKey:@"contrastLog1"] boolValue];
+            temporalFreqLog = [[rangeDefaults objectForKey:@"temporalFreqLog1"] boolValue];
+            
             hideStimulus = [[task defaults] boolForKey:GRFHideRightKey];
             break;
 	}
     
     convertToGrating = [[task defaults] boolForKey:GRFConvertToGratingKey];
-    linearTFRange = [[task defaults] boolForKey:GRFLinearTFRangeKey];
 
     localList = CFBitVectorCreateMutableCopy(NULL, stimInBlock, doneList);
 	localFreshCount = stimRemainingInBlock;
@@ -294,22 +306,44 @@ maxTargetS and a long stimLeadMS).
         
 		if (convertToGrating) { // Sigma very high
 			stimDesc.sigmaDeg = 100000;
-			stimDesc.radiusDeg = [self linearValueWithIndex:sigmaIndex count:sigmaCount min:sigmaDegMin max:sigmaDegMax] * radiusSigmaRatio;
+            if (sigmaLog) {
+                stimDesc.radiusDeg = [self logValueWithIndex:sigmaIndex count:sigmaCount min:sigmaDegMin max:sigmaDegMax] * radiusSigmaRatio;
+            }
+            else {
+                stimDesc.radiusDeg = [self linearValueWithIndex:sigmaIndex count:sigmaCount min:sigmaDegMin max:sigmaDegMax] * radiusSigmaRatio;
+            }
 		}
 		else {
-			stimDesc.sigmaDeg = [self linearValueWithIndex:sigmaIndex count:sigmaCount min:sigmaDegMin max:sigmaDegMax];
+            if (sigmaLog) {
+                stimDesc.sigmaDeg = [self logValueWithIndex:sigmaIndex count:sigmaCount min:sigmaDegMin max:sigmaDegMax];
+            }
+            else {
+                stimDesc.sigmaDeg = [self linearValueWithIndex:sigmaIndex count:sigmaCount min:sigmaDegMin max:sigmaDegMax];
+            }
 			stimDesc.radiusDeg = stimDesc.sigmaDeg * radiusSigmaRatio;
 		}
         
-        stimDesc.spatialFreqCPD = [self logValueWithIndex:spatialFreqIndex count:spatialFreqCount min:spatialFreqCPDMin max:spatialFreqCPDMax];
-		stimDesc.directionDeg = [self linearValueWithIndex:directionDegIndex count:directionDegCount min:directionDegMin max:directionDegMax];
-		
-		stimDesc.contrastPC = [self contrastValueFromIndex:contrastIndex count:contrastCount min:contrastPCMin max:contrastPCMax];
-        if (linearTFRange) { // Temporal frequency increases linearly from min to max
-            stimDesc.temporalFreqHz = [self linearValueWithIndex:temporalFreqIndex count:temporalFreqCount min:temporalFreqHzMin max:temporalFreqHzMax];
+        if (spatialFreqLog) {
+            stimDesc.spatialFreqCPD = [self logValueWithIndex:spatialFreqIndex count:spatialFreqCount min:spatialFreqCPDMin max:spatialFreqCPDMax];
         }
         else {
+            stimDesc.spatialFreqCPD = [self linearValueWithIndex:spatialFreqIndex count:spatialFreqCount min:spatialFreqCPDMin max:spatialFreqCPDMax];
+        }
+
+        stimDesc.directionDeg = [self linearValueWithIndex:directionDegIndex count:directionDegCount min:directionDegMin max:directionDegMax];
+		
+        if (contrastLog) {
+            stimDesc.contrastPC = [self contrastValueFromIndex:contrastIndex count:contrastCount min:contrastPCMin max:contrastPCMax];
+        }
+        else {
+            stimDesc.contrastPC = [self linearValueWithIndex:contrastIndex count:contrastCount min:contrastPCMin max:contrastPCMax];
+        }
+        
+        if (temporalFreqLog) {
             stimDesc.temporalFreqHz = [self contrastValueFromIndex:temporalFreqIndex count:temporalFreqCount min:temporalFreqHzMin max:temporalFreqHzMax];
+        }
+        else {
+            stimDesc.temporalFreqHz = [self linearValueWithIndex:temporalFreqIndex count:temporalFreqCount min:temporalFreqHzMin max:temporalFreqHzMax];
         }
         
         if (stimDesc.temporalFreqHz>=frameRateHz/2) {

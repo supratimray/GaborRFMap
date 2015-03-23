@@ -70,6 +70,7 @@ NSString *GRFChangeRemainKey = @"GRFChangeRemain";
 NSString *GRFChangeArrayKey = @"GRFChangeArray";
 NSString *GRFStimTablesKey = @"GRFStimTables";
 NSString *GRFStimTableCountsKey = @"GRFStimTableCounts";
+NSString *GRFStimTableRangeTypesKey = @"GRFStimTableRangeTypes";
 NSString *GRFMapStimContrastPCKey = @"GRFMapStimContrastPC";
 NSString *GRFMapStimRadiusSigmaRatioKey = @"GRFMapStimRadiusSigmaRatio";
 NSString *GRFTargetAlphaKey = @"GRFTargetAlpha";
@@ -88,8 +89,6 @@ NSString *GRFMapTemporalModulationKey = @"GRFMapTemporalModulation";
 
 NSString *GRFConvertToPlaidKey = @"GRFConvertToPlaid";
 
-NSString *GRFLinearTFRangeKey = @"GRFLinearTFRange";
-
 // Visual Stimulus Parameters 
 
 NSString *GRFSpatialPhaseDegKey = @"GRFSpatialPhaseDeg";
@@ -102,7 +101,7 @@ NSString *GRFValidRepsKey = @"validReps";
 NSString *GRFInvalidRepsKey = @"invalidReps";
 
 NSString *keyPaths[] = {@"values.GRFBlockLimit", @"values.GRFRespTimeMS", 
-					@"values.GRFStimTableCounts", @"values.GRFStimTables",
+					@"values.GRFStimTableCounts", @"values.GRFStimTables", @"values.GRFStimTableRangeTypes",
 					@"values.GRFStimDurationMS", @"values.GRFMapStimDurationMS", @"values.GRFMapInterstimDurationMS", 
 					@"values.GRFInterstimMS", @"values.GRFOrientationChanges", @"values.GRFMappingBlocks",
 					@"values.GRFMinDirChangeDeg", @"values.GRFMaxDirChangeDeg", @"values.GRFStimRepsPerBlock",

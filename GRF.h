@@ -245,8 +245,6 @@ extern NSString *GRFMapTemporalModulationKey;
 
 extern NSString *GRFConvertToPlaidKey;
 
-extern NSString *GRFLinearTFRangeKey;
-
 long		argRand;
 
 #import "GRFStimuli.h"
