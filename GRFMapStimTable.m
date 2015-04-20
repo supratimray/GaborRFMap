@@ -42,6 +42,7 @@ static long GRFMapStimTableCounter = 0;
     mapIndex = index;
 	[self updateBlockParameters];
     doneList = CFBitVectorCreateMutable(NULL, stimInBlock);
+    CFBitVectorSetCount(doneList, stimInBlock);
 	[self newBlock];
 	return self;
 }
@@ -197,6 +198,7 @@ maxTargetS and a long stimLeadMS).
     convertToGrating = [[task defaults] boolForKey:GRFConvertToGratingKey];
 
     localList = CFBitVectorCreateMutableCopy(NULL, stimInBlock, doneList);
+    CFBitVectorSetCount(localList, stimInBlock);
 	localFreshCount = stimRemainingInBlock;
 	frameRateHz = [[task stimWindow] frameRateHz];
 /*
