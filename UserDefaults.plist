@@ -338,6 +338,8 @@
 	<integer>2500</integer>
 	<key>GRFNumInstructTrials</key>
 	<integer>2</integer>
+	<key>GRFPlayAudStim</key>
+	<false/>
 	<key>GRFPrecueMS</key>
 	<integer>250</integer>
 	<key>GRFRandTaskGaborDirection</key>

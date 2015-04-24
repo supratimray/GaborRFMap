@@ -28,6 +28,7 @@ GRFStimuli.h
     LLFixTarget				*targetSpot;
 //	LLGabor 				*taskGabor;
     LLPlaid                 *plaid;
+    NSString                *soundsDir;
 }
 
 - (void)doFixSettings;
@@ -53,5 +54,6 @@ GRFStimuli.h
 - (void)tallyStimLists:(long)count;
 - (long)targetOnFrame;
 - (BOOL)targetPresented;
+-(NSString*)getSoundFolder;
 
 @end

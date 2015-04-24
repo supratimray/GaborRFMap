@@ -244,6 +244,7 @@ extern NSString *GRFIncludeCatchTrialsinDoneListKey;
 extern NSString *GRFMapTemporalModulationKey;
 
 extern NSString *GRFConvertToPlaidKey;
+extern NSString *GRFPlayAudStimKey;
 
 long		argRand;
 

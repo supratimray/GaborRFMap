@@ -88,6 +88,7 @@ NSString *GRFIncludeCatchTrialsinDoneListKey = @"GRFIncludeCatchTrialsinDoneList
 NSString *GRFMapTemporalModulationKey = @"GRFMapTemporalModulation";
 
 NSString *GRFConvertToPlaidKey = @"GRFConvertToPlaid";
+NSString *GRFPlayAudStimKey = @"GRFPlayAudStim";
 
 // Visual Stimulus Parameters 
 
@@ -342,8 +343,8 @@ long                trialCounter;
 	behaviorController = [[GRFBehaviorController alloc] init];
     [dataDoc addObserver:behaviorController];
 
-	spikeController = [[GRFSpikeController alloc] init];
-    [dataDoc addObserver:spikeController];
+//	spikeController = [[GRFSpikeController alloc] init];
+//    [dataDoc addObserver:spikeController];
 
     eyeXYController = [[GRFEyeXYController alloc] init];
     [dataDoc addObserver:eyeXYController];
