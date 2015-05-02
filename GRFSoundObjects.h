@@ -15,9 +15,9 @@
     int                     stimulusDuration;
 }
 
-// Only the following Method is accessible to GRFStimuli.m. This is called in the method presentStimSequence of GRFStimuli.m and returns an array of a string that contains the name of the sound file and a number that contains protocol-specific volume
+// Only the following Method is accessible to other classes. This returns an array of a string that contains the name of the sound file and a number that contains protocol-specific volume
 -(NSArray*)getSoundDetailsforGabor:(StimDesc)pSD;
 
-// Protocol-specific methods are declared in GRFSoundObjects.m, and are not accessible to GRFStimuli.m
+// Protocol-specific methods are declared in GRFSoundObjects.m, and are not accessible to other classes
 
 @end

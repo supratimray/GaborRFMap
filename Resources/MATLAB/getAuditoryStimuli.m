@@ -101,7 +101,7 @@ for ai=1:alen
                             % Save file: 2-channel data sampled at 44100
                             % Hz, with 24 bits per sample in .wav format                                                       
                             FileName = ['Azi_' sprintf('%.1f',aList(ai)) '_Elev_' sprintf('%.1f',eList(ei)) '_Type_' num2str(s) '_RF_' sprintf('%.1f',Om(fi)) '_RP_' num2str(Ph(oi)*(180/pi)) '_MD_' sprintf('%.1f',Mo(ci)) '_RV_' sprintf('%.1f',w(ti)) '_Dur_' num2str(T0*1000)];
-                            audiowrite([folderName filesep [FileName '.wav']],soundFile,SF,'BitsPerSample',24);
+                            audiowrite([folderName filesep [FileName '.wav']],soundFile,SF,'BitsPerSample',16);
                             disp(['Saved sound file: ' FileName '.wav to folder: ' folderName]);
 
                         end
@@ -203,7 +203,7 @@ for ai=1:alen
                             % Save file: 2-channel data sampled at 44100
                             % Hz, with 24 bits per sample in .wav format                            
                             FileName = ['Azi_' sprintf('%.1f',aList(ai)) '_Elev_' sprintf('%.1f',eList(ei)) '_Type_' num2str(s) '_RF_' sprintf('%.1f',f0(fi)) '_RP_' num2str(Ph*(180/pi)) '_MD_' sprintf('%.1f',Mo(ci)) '_RV_' sprintf('%.1f',w(ti)) '_Dur_' num2str(T0*1000)];
-                            audiowrite([FolderName filesep FileName '.wav'],soundFile,SF,'BitsPerSample',24);
+                            audiowrite([FolderName filesep FileName '.wav'],soundFile,SF,'BitsPerSample',16);
                             disp(['Saved sound file: ' FileName '.wav to folder: ' FolderName]);
 
                         end
@@ -305,7 +305,7 @@ for ai=1:alen
                             % Save file: 2-channel data sampled at 44100
                             % Hz, with 24 bits per sample in .wav format                                                       
                             FileName = ['Noise_Dur_' num2str(T0*1000)];
-                            audiowrite([folderName filesep [FileName '.wav']],soundFile,SF,'BitsPerSample',24);
+                            audiowrite([folderName filesep [FileName '.wav']],soundFile,SF,'BitsPerSample',16);
                             disp(['Saved sound file: ' FileName '.wav to folder: ' folderName]);
 
                         end

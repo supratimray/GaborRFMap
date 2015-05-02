@@ -36,7 +36,7 @@
      
     */
     
-    if (protocolType == 1) { // Stationary and Moving Ripples protocols (1a and 1b respectively)
+    if (protocolType == 1) { // Stationary and Moving Ripples protocols (eye open and closed state, both)
         soundName = [self getRipplesProtocolsSoundNameforGabor:pSD];
         stimVolume = [NSNumber numberWithFloat:1.0]; // Volume is constant at 100%
     }
@@ -44,13 +44,9 @@
         soundName = [self getSAMProtocolSoundNameforGabor:pSD];
         stimVolume = [NSNumber numberWithFloat:1.0]; // Volume is constant at 100%
     }
-    else if (protocolType == 3) { // Moving Ripples protocol, eyes closed
-        soundName = [self getRippleProtocolEyesClosedSoundNameforGabor:pSD];
-        stimVolume = [NSNumber numberWithFloat:1.0]; // Volume is constant at 100%
-    }
-    else if (protocolType == 4){ // Ripples protocol with varying volume with and without visual stimuli of different contrasts
+    else if (protocolType == 3){ // Ripples protocol with varying volume with and without visual stimuli of different contrasts
         soundName = [self getVaryingVolumeProtocolSoundNameforGabor:pSD];
-        stimVolume = [NSNumber numberWithFloat:(pSD.contrastPC/100)]; // Volume is varying, mapped to contrast of the specific gabor (here, it is rightgabor)
+        stimVolume = [NSNumber numberWithFloat:(pSD.contrastPC/100)]; // Volume is varying, mapped to contrast of the specific gabor
     }
     else if (protocolType == 10) { // Noise burst protocol
         soundName = [self getNoiseProtocolsSoundNameforGabor:pSD];
@@ -95,20 +91,12 @@
     return soundName;
 }
 
--(NSString*)getRippleProtocolEyesClosedSoundNameforGabor:(StimDesc)pSD
-{
-    int stimType = 1; // Ripple sounds
-    NSString * soundName = [NSString stringWithFormat:@"Azi_%.1f_%@_%.1f_%@_%.0d_%@_%.1f_%@_%.0f_%@_%.1f_%@_%.1f_%@_%.0d.wav",(pSD.azimuthDeg),@"Elev",(pSD.elevationDeg),@"Type",stimType,@"RF",(pSD.spatialFreqCPD),@"RP",(pSD.directionDeg),@"MD",(pSD.contrastPC/100),@"RV",(pSD.temporalFreqHz*8),@"Dur",stimulusDuration];
-    return soundName;
-}
-
 -(NSString*)getVaryingVolumeProtocolSoundNameforGabor:(StimDesc)pSD
 {
     int stimType = 1; // Ripple sounds
     NSString * soundName = [NSString stringWithFormat:@"Azi_%.1f_%@_%.1f_%@_%.0d_%@_%.1f_%@_%.0f_%@_%.1f_%@_%.1f_%@_%.0d.wav",(pSD.azimuthDeg),@"Elev",(pSD.elevationDeg),@"Type",stimType,@"RF",(pSD.spatialFreqCPD),@"RP",(pSD.directionDeg),@"MD",0.9,@"RV",(pSD.temporalFreqHz),@"Dur",stimulusDuration]; // Modulation depth is fixed at 0.9
     return soundName;
 }
-
 
 -(NSString*)getNoiseProtocolsSoundNameforGabor:(StimDesc)pSD
 {

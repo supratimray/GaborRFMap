@@ -8,7 +8,7 @@ March 29, 2003 JHRM
 #import "GaborRFMap.h"
 #import "GRFStimuli.h"
 #import "UtilityFunctions.h"
-#import "GRFSoundObjects.h"
+#import "GRFSoundPlayer.h"
 
 #define kDefaultDisplayIndex	1		// Index of stim display when more than one display
 #define kMainDisplayIndex		0		// Index of main stimulus display
@@ -302,7 +302,7 @@ by mapStimTable.
     [pld setDirectionDeg0:pSD0->directionDeg];
     [pld directSetContrast0:pSD0->contrastPC / 100.0];
     [pld directSetTemporalFreqHz0:pSD0->temporalFreqHz];
-    [pld setTemporalModulation0:pSD0->temporalModulation];
+    [pld directSetTemporalModulation0:pSD0->temporalModulation];
     
     if (pSD0->temporalFreqHz == [[task stimWindow] frameRateHz]/2) {
         [pld directSetTemporalPhaseDeg0:90.0];
@@ -315,7 +315,7 @@ by mapStimTable.
     [pld setDirectionDeg1:pSD1->directionDeg];
     [pld directSetContrast1:pSD1->contrastPC / 100.0];
     [pld directSetTemporalFreqHz1:pSD1->temporalFreqHz];
-    [pld setTemporalModulation1:pSD1->temporalModulation];
+    [pld directSetTemporalModulation1:pSD1->temporalModulation];
     
     if (pSD1->temporalFreqHz == [[task stimWindow] frameRateHz]/2) {
         [pld directSetTemporalPhaseDeg1:90.0];
@@ -361,7 +361,7 @@ by mapStimTable.
     BOOL convertToPlaid;
     // local variables related to auditory stimulus [MD 25/04/2015]
     BOOL playAudStim;
-    NSSound *player;
+    GRFSoundPlayer *player = [[GRFSoundPlayer alloc] init];
 	
     threadPool = [[NSAutoreleasePool alloc] init];		// create a threadPool for this thread
 	[LLSystemUtil setThreadPriorityPeriodMS:1.0 computationFraction:0.250 constraintFraction:1.0];
@@ -418,7 +418,7 @@ playAudStim = [[task defaults] boolForKey:GRFPlayAudStimKey];
 		glClear(GL_COLOR_BUFFER_BIT);
 		for (index = 0; index < kGabors; index++) {
 			if (trialFrame >= stimDescs[index].stimOnFrame && trialFrame < stimDescs[index].stimOffFrame) {
-				if (stimDescs[index].stimType != kNullStim) {
+				if (stimDescs[index].stimType != kNullStim && stimDescs[index].stimType !=kAudStim) {
                     theGabor = [gabors objectAtIndex:index];
                     [theGabor directSetFrame:[NSNumber numberWithLong:gaborFrames[index]]];	// advance for temporal modulation
                     [theGabor draw];
@@ -433,22 +433,25 @@ playAudStim = [[task defaults] boolForKey:GRFPlayAudStimKey];
                 
                 // Loop for visual stimuli (gabors) ends here. Loop for auditory stimulus begins next. Hence gaborFrames[index] is incremented after auditory stimulus. [MD 25/04/2015]
                 
-                // Auditory Stimulus. This is presently mapped to the properties of the right gabor. This is played only if Auditory Stimulus check-box is checked. [MD 25/04/2015]                
-                if (playAudStim && index == kMapGabor1 && gaborFrames[kMapGabor1] == 0){
+                // Auditory Stimulus. This is played only if Auditory Stimulus check-box is checked. [MD 25/04/2015]
+                int kMapGaborAV = kMapGabor1; // Auditory gabor. This is presently mapped to the properties of the right gabor.
+                if (playAudStim && index == kMapGaborAV && gaborFrames[kMapGaborAV] == 0){
                     
-                    // Get details of the sound object, namely sound name and volume, mapped to the properties of the right gabor
-                    GRFSoundObjects *soundObject = [[[GRFSoundObjects alloc] init] autorelease];
-                    NSArray *soundDetails = [soundObject getSoundDetailsforGabor:stimDescs[kMapGabor1]];
-                    NSString *soundName = [soundDetails objectAtIndex:0];
-                    float stimVolume = [[soundDetails objectAtIndex:1] floatValue];
+                    // Play the required sound stimulus                    
+                    [player getSoundForGabor:stimDescs[kMapGabor1] fromDir:soundsDir];
+                    [player startPlay];
                     
-                    // Get NSSound object for the given sound name from the Sounds directory and play it at the specified volume
-                    player = [self getPlayerForSoundNamed:soundName];
-                    [player setVolume:[[NSString stringWithFormat:@"%.02f", stimVolume] floatValue] ];
-                    NSLog(@"Player Volume %f",[player volume]);
-                    [player play];
+                    // Changes in stimDescs that would indicate presence of auditory stimulus in LL data
+                    if (stimDescs[kMapGaborAV].stimType == kNullStim) {
+                        stimDescs[kMapGaborAV].stimType = kAudStim; // Only Auditory stimulus for this gabor
+                    }
+                    else if (stimDescs[kMapGaborAV].stimType == kValidStim) {
+                        stimDescs[kMapGaborAV].stimType = kVisAudStim; // Both Auditory and visual stimuli mapped to the same gabor
+                    }
                     
                 }
+                
+                // Increment gaborFrames here
                 gaborFrames[index]++;
 			}
 		}
@@ -579,7 +582,7 @@ playAudStim = [[task defaults] boolForKey:GRFPlayAudStimKey];
 // If playing auditory stimulus, abort playing if abortStimuli or listDone is true [MD 25/04/2015]
     if (playAudStim) {
         if (abortStimuli || listDone){
-            [player stop];
+            [player stopPlay];
         }
     }
     
@@ -601,6 +604,10 @@ playAudStim = [[task defaults] boolForKey:GRFPlayAudStimKey];
     
 //	[gabors makeObjectsPerformSelector:@selector(restore)];
 //  [plaid restore];
+    
+    // Release all contents of the GRFSoundPlayer object player
+    [player stopPlay];
+    [player playerDeactivate];
     
 	stimulusOn = abortStimuli = NO;
 	[stimLists release];
@@ -699,21 +706,9 @@ playAudStim = [[task defaults] boolForKey:GRFPlayAudStimKey];
 	return [gabors objectAtIndex:kTaskGabor];
 }
 
--(NSSound*)getPlayerForSoundNamed:(NSString*)soundName //[MD 25/04/2015]
-{
-    // Get file url as an NSString object
-    NSString *soundPath = [[NSString alloc] initWithString:[soundsDir stringByAppendingPathComponent:@"Sounds"]];
-    NSString *soundFile = [[NSString alloc] initWithString:[soundPath stringByAppendingPathComponent:soundName]];
-    NSLog(@"Sound File: %@",soundFile);
-    
-    // Get NSSound player specified by the file and return it
-    NSSound *player = [[NSSound alloc] initWithContentsOfFile:soundFile byReference:NO];
-    return player;
-};
-
 -(NSString*)getSoundFolder // [MD 25/04/2015]
 {
-    NSString *soundFolderPath; // Declare output variable
+    NSString *soundFolderPath = [[NSString alloc] initWithString:@""]; // Declare output variable, init with an empty string
     NSString *searchFilename = @"getAuditoryStimuli.m"; // This is the MATLAB file whose parent directory (one directory above) also contains all the sound stimuli in another sub-directory called Sounds. In our case, it is the Resources folder
     
     // Search for the specific path. It is assumed that this folder is in the specific user's Documents directory
@@ -728,6 +723,11 @@ playAudStim = [[task defaults] boolForKey:GRFPlayAudStimKey];
             // Initialise sound folder path as a string with the contents of parent directory of getAuditoryStimuli.m file
             soundFolderPath = [[NSString alloc] initWithString:[documentsDirectory stringByAppendingPathComponent:[[documentsSubpath stringByDeletingLastPathComponent] stringByDeletingLastPathComponent]]];
         }
+    }
+    
+    // If the MATLAB file is not found (and hence the Sounds directory could not be located), log a message
+    if ([soundFolderPath isEqualToString:@""]) {
+        NSLog(@"Sounds directory could not be located as the search file %@ could not be found in the user's Documents directory.",searchFilename);
     }
     
     // Return the parent directory path
