@@ -10,56 +10,95 @@
 
 @implementation GRFSoundObjects
 
--(NSArray*)getSoundDetailsforGabor:(StimDesc)pSD
+//////////////////////////////// Do not change the following code unless necessary ////////////////////////////////////
+
+-(id)init
 {
-    // Do not change the following code unless necessary
-    // Defaults
-    NSNumber *stimVolume = [NSNumber numberWithFloat:1]; // Default would be taken to be the maximum volume if it is not specified in the Protocol Specific Assignments loop.
+    soundName = [[NSString alloc] init];
+    soundFile = [[NSString alloc] init];
+    return self;
+}
+
+-(void)dealloc
+{
+    [super dealloc];
+}
+
+-(void)getSoundForGabor:(AudStimDesc)pSD fromDir:(NSString*)soundsDir
+{
+
+    // Get stimulus duration and protocol type
+    stimulusDuration = pSD.stimDurationMS;
+    int protocolType = pSD.protocolType;
     
-    // Protocol type is to be specified in the min cell of sigma of the right gabor for now
-    NSString *soundName = [[NSString alloc] init];
-    NSArray *stimTableDefaults = [[task defaults] arrayForKey:@"GRFStimTables"];
-    NSDictionary *minDefaults = [stimTableDefaults objectAtIndex:0];
-    float protocolType = [[minDefaults objectForKey:@"sigmaDeg1"] floatValue];
+    // Get sound file name
+    [self getSoundDetailsforGabor:pSD forProtocolType:protocolType];
+    soundFile = [[soundsDir stringByAppendingPathComponent:@"Sounds"] stringByAppendingPathComponent:soundName];
     
-    stimulusDuration = [[task defaults] integerForKey:GRFMapStimDurationMSKey];
+    // Init player with set volume
+    player = [[NSSound alloc] initWithContentsOfFile:soundFile byReference:NO];
+    [player setVolume:stimVolume];
     
+    // Log the name of the sound file as this could be helpful durimg runtime
+    NSLog(@"Sound File: %@",soundFile);
     
-    
-    //////////////////////////////////// Protocol Specific Assignments ///////////////////////////////
-    
-    // Add protocol-specific statements in this loop.
-    /* Format for adding assignments:
-     
-     soundName = [self get______ProtocolSoundNameforGabor:pSD];
-     stimVolume = [NSNumber numberWithFloat:'x'];
-     
-    */
-    
+    // Assign self as delegate
+    [player setDelegate:self];
+}
+
+-(void)startPlay
+{
+    [player play];
+    playerDone = NO;
+}
+
+-(void)stopPlay
+{
+    if (!playerDone) {
+        [player stop];
+    }
+}
+
+// Use the following NSSoundDelegate method to release player after playback. This method gets invoked automatically once playback is over or is stopped.
+-(void)sound:(NSSound *)sound didFinishPlaying:(BOOL)aBool
+{
+    playerDone = YES;
+    [sound setDelegate:nil];
+    [sound release];
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+////////////////////////////////////// Protocol Specific Calls ///////////////////////////////////////
+
+// Add protocol-specific statements in this loop.
+/* Format for adding assignments:
+ 
+ else if {
+ [self get______ProtocolSoundForGabor:pSD];
+ }
+ 
+ */
+
+
+-(void)getSoundDetailsforGabor:(AudStimDesc)pSD forProtocolType:(int)protocolType
+{
     if (protocolType == 1) { // Stationary and Moving Ripples protocols (eye open and closed state, both)
-        soundName = [self getRipplesProtocolsSoundNameforGabor:pSD];
-        stimVolume = [NSNumber numberWithFloat:1.0]; // Volume is constant at 100%
+        [self getRipplesProtocolsSoundForGabor:pSD];
     }
     else if (protocolType == 2){ // Sinusoidal Amplitude Modulated sounds Protocol
-        soundName = [self getSAMProtocolSoundNameforGabor:pSD];
-        stimVolume = [NSNumber numberWithFloat:1.0]; // Volume is constant at 100%
+        [self getSAMProtocolSoundForGabor:pSD];
     }
     else if (protocolType == 3){ // Ripples protocol with varying volume with and without visual stimuli of different contrasts
-        soundName = [self getVaryingVolumeProtocolSoundNameforGabor:pSD];
-        stimVolume = [NSNumber numberWithFloat:(pSD.contrastPC/100)]; // Volume is varying, mapped to contrast of the specific gabor
+        [self getVaryingVolumeProtocolSoundForGabor:pSD];
     }
     else if (protocolType == 10) { // Noise burst protocol
-        soundName = [self getNoiseProtocolsSoundNameforGabor:pSD];
-        stimVolume = [NSNumber numberWithFloat:1.0]; // Volume is constant at 100%
+        [self getNoiseProtocolsSoundForGabor:pSD];
     }
-    
-    //////////////////////////////////////////////////////////////////////////////////////////////////
-    
-    
-    
-    // Do not change the following code unless necessary
-    NSArray *soundDetails = [[NSArray alloc] initWithObjects:(NSString*)soundName,(NSNumber*)stimVolume, nil];
-    return soundDetails;
 }
 
 
@@ -68,41 +107,41 @@
 
 /* Format for adding methods:
  
- -(NSString*)get______ProtocolSoundNameforGabor:(StimDesc)pSD
+ -(void)get______ProtocolSoundForGabor:(AudStimDesc)pSD
  {
- int stimType = x; // 'x' sounds
- NSString * soundName = [NSString stringWithFormat:@"(name as a string)"]; *** Make sure to include the file extension with the name
- return soundName;
+     int stimType = x; // 'x' sounds
+     soundName = [NSString stringWithFormat:@"(name as a string)"]; // *** Make sure to include the file extension with the name
+     stimVolume = y;
  }
  
  */
 
--(NSString*)getRipplesProtocolsSoundNameforGabor:(StimDesc)pSD
+-(void)getRipplesProtocolsSoundForGabor:(AudStimDesc)pSD
 {
     int stimType = 1; // Ripple sounds
-    NSString * soundName = [NSString stringWithFormat:@"Azi_%.1f%@%.1f%@%.0d%@%.1f%@%.0f%@%.1f%@%.1f%@%.0d.wav",(pSD.azimuthDeg),@"_Elev_",(pSD.elevationDeg),@"_Type_",stimType,@"_RF_",(pSD.spatialFreqCPD),@"_RP_",(pSD.directionDeg),@"_MD_",(pSD.contrastPC/100),@"_RV_",(pSD.temporalFreqHz),@"_Dur_",stimulusDuration];
-    return soundName;
+    soundName = [NSString stringWithFormat:@"Azi_%.1f%@%.1f%@%.0d%@%.1f%@%.0f%@%.1f%@%.1f%@%.0d.wav",(pSD.azimuthDeg),@"_Elev_",(pSD.elevationDeg),@"_Type_",stimType,@"_RF_",(pSD.spatialFreqCPD),@"_RP_",(pSD.directionDeg),@"_MD_",(pSD.contrastPC/100),@"_RV_",(pSD.temporalFreqHz),@"_Dur_",stimulusDuration];
+    stimVolume = 1;
 }
 
--(NSString*)getSAMProtocolSoundNameforGabor:(StimDesc)pSD
+-(void)getSAMProtocolSoundForGabor:(AudStimDesc)pSD
 {
     int stimType = 2; // SAM sounds
-    NSString * soundName = [NSString stringWithFormat:@"Azi_%.1f_%@_%.1f_%@_%.0d_%@_%.1f_%@_%.0f_%@_%.1f_%@_%.1f_%@_%.0d.wav",(pSD.azimuthDeg),@"Elev",(pSD.elevationDeg),@"Type",stimType,@"RF",(pSD.spatialFreqCPD),@"RP",(pSD.directionDeg),@"MD",(pSD.contrastPC/100),@"RV",(pSD.temporalFreqHz),@"Dur",stimulusDuration];
-    return soundName;
+    soundName = [NSString stringWithFormat:@"Azi_%.1f_%@_%.1f_%@_%.0d_%@_%.1f_%@_%.0f_%@_%.1f_%@_%.1f_%@_%.0d.wav",(pSD.azimuthDeg),@"Elev",(pSD.elevationDeg),@"Type",stimType,@"RF",(pSD.spatialFreqCPD),@"RP",(pSD.directionDeg),@"MD",(pSD.contrastPC/100),@"RV",(pSD.temporalFreqHz),@"Dur",stimulusDuration];
+    stimVolume = 1;
 }
 
--(NSString*)getVaryingVolumeProtocolSoundNameforGabor:(StimDesc)pSD
+-(void)getVaryingVolumeProtocolSoundForGabor:(AudStimDesc)pSD
 {
     int stimType = 1; // Ripple sounds
-    NSString * soundName = [NSString stringWithFormat:@"Azi_%.1f_%@_%.1f_%@_%.0d_%@_%.1f_%@_%.0f_%@_%.1f_%@_%.1f_%@_%.0d.wav",(pSD.azimuthDeg),@"Elev",(pSD.elevationDeg),@"Type",stimType,@"RF",(pSD.spatialFreqCPD),@"RP",(pSD.directionDeg),@"MD",0.9,@"RV",(pSD.temporalFreqHz),@"Dur",stimulusDuration]; // Modulation depth is fixed at 0.9
-    return soundName;
+    soundName = [NSString stringWithFormat:@"Azi_%.1f_%@_%.1f_%@_%.0d_%@_%.1f_%@_%.0f_%@_%.1f_%@_%.1f_%@_%.0d.wav",(pSD.azimuthDeg),@"Elev",(pSD.elevationDeg),@"Type",stimType,@"RF",(pSD.spatialFreqCPD),@"RP",(pSD.directionDeg),@"MD",0.9,@"RV",(pSD.temporalFreqHz),@"Dur",stimulusDuration]; // Modulation depth is fixed at 0.9
+    stimVolume = (pSD.contrastPC)/100;
 }
 
--(NSString*)getNoiseProtocolsSoundNameforGabor:(StimDesc)pSD
+-(void)getNoiseProtocolsSoundForGabor:(AudStimDesc)pSD
 {
-    // Noise_Dur_100
-    NSString * soundName = [NSString stringWithFormat:@"Noise_Dur_%.0d.wav",stimulusDuration];
-    return soundName;
+    // stimType is Noise
+    soundName = [NSString stringWithFormat:@"Noise_Dur_%.0d.wav",stimulusDuration];
+    stimVolume = 1;
 }
 
 

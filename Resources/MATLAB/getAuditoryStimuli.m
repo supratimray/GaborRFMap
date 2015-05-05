@@ -184,7 +184,7 @@ for ai=1:alen
 
                             % Baphy code
                             disp([char(10) 'New Sound']);
-                            rippleList = [Am w(ti) Om Ph];
+                            rippleList = [Am w(ti) Om Ph(oi)];
                             disp('Am      w       Om      Ph');
                             disp(num2str(rippleList));
                             [soundData,profile] = multimvripfft1(rippleList, cond,comp_phs_file);                            

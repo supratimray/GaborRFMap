@@ -21,7 +21,7 @@ enum {kLinear = 0, kLogarithmic};
 enum {kUniform = 0, kExponential};
 enum {kAuto = 0, kManual};
 enum {kRewardFixed = 0, kRewardVariable};
-enum {kNullStim = 0, kValidStim, kTargetStim, kFrontPadding, kBackPadding, kAudStim, kVisAudStim}; // kAudStim and kVisAudStim added by MD to indicate auditory/ combined auditory-visual gabors respectively
+enum {kNullStim = 0, kValidStim, kTargetStim, kFrontPadding, kBackPadding, kPlaidStim, kAudStim, kVisAudStim}; // kAudStim and kVisAudStim added by MD to indicate auditory/ combined auditory-visual gabors respectively
 enum {kMyEOTCorrect = 0, kMyEOTMissed, kMyEOTEarlyToValid, kMyEOTEarlyToInvalid, kMyEOTBroke, 
 				kMyEOTIgnored, kMyEOTQuit, kMyEOTTypes};
 enum {  kTrialStartDigitOutCode = 0x0010,
@@ -34,7 +34,7 @@ enum {  kTrialStartDigitOutCode = 0x0010,
 
 #define	kSleepInMicrosec	5000
 #define	kMaxOriChanges      12
-#define kMaxMapValues       6
+#define kMaxMapValues       12
 
 typedef struct {
 	long	levels;				// number of active stimulus levels

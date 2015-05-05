@@ -54,6 +54,5 @@ GRFStimuli.h
 - (void)tallyStimLists:(long)count;
 - (long)targetOnFrame;
 - (BOOL)targetPresented;
--(NSString*)getSoundFolder;
 
 @end

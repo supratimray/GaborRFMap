@@ -8,7 +8,7 @@ March 29, 2003 JHRM
 #import "GaborRFMap.h"
 #import "GRFStimuli.h"
 #import "UtilityFunctions.h"
-#import "GRFSoundPlayer.h"
+#import "GRFSoundObjects.h"
 
 #define kDefaultDisplayIndex	1		// Index of stim display when more than one display
 #define kMainDisplayIndex		0		// Index of main stimulus display
@@ -25,6 +25,7 @@ March 29, 2003 JHRM
 #define kAdjusted(color, contrast)  (kMidGray + (color - kMidGray) / 100.0 * contrast)
 
 NSString *stimulusMonitorID = @"GaborRFMap Stimulus";
+GRFSoundObjects          *player;
 
 @implementation GRFStimuli
 
@@ -38,6 +39,7 @@ NSString *stimulusMonitorID = @"GaborRFMap Stimulus";
     [targetSpot release];
     [gabors release];
     [plaid release];
+    [player dealloc];
 
     [super dealloc];
 }
@@ -106,8 +108,9 @@ NSString *stimulusMonitorID = @"GaborRFMap Stimulus";
     [self initPlaid:NO];
     [plaid setAchromatic:YES];
     
-    // Get the location of the sounds directory when Knot is initiated [MD 25/04/2015]
+    // Get the location of the sounds directory and init player object when Knot is initiated [MD 25/04/2015]
     soundsDir = [[NSString alloc] initWithString:[self getSoundFolder]];
+    player = [[GRFSoundObjects alloc] init];
 
 	return self;
 }
@@ -350,6 +353,7 @@ by mapStimTable.
     long index, trialFrame, taskGaborFrame;
 	NSArray *stimLists;
 	StimDesc stimDescs[kGabors], *pSD;
+    AudStimDesc audStim;
 	long stimIndices[kGabors];
 	long stimOffFrames[kGabors];
 	long gaborFrames[kGabors];
@@ -361,15 +365,12 @@ by mapStimTable.
     BOOL convertToPlaid;
     // local variables related to auditory stimulus [MD 25/04/2015]
     BOOL playAudStim;
-    GRFSoundPlayer *player = [[GRFSoundPlayer alloc] init];
+    int kMapGaborAV;
 	
     threadPool = [[NSAutoreleasePool alloc] init];		// create a threadPool for this thread
 	[LLSystemUtil setThreadPriorityPeriodMS:1.0 computationFraction:0.250 constraintFraction:1.0];
 	
 	stimLists = [[NSArray arrayWithObjects:taskStimList, mapStimList0, mapStimList1, nil] retain];
-    
-// check the state of 'Auditory Stimulus' check-box [MD 25/04/2015]
-playAudStim = [[task defaults] boolForKey:GRFPlayAudStimKey];
 
 // Set up the stimulus calibration, including the offset then present the stimulus sequence
 
@@ -386,6 +387,8 @@ playAudStim = [[task defaults] boolForKey:GRFPlayAudStimKey];
 		[self loadGabor:[gabors objectAtIndex:index] withStimDesc:&stimDescs[index]];
 		stimOffFrames[index] = stimDescs[index].stimOffFrame;
 	}
+    
+    [gabors makeObjectsPerformSelector:@selector(store)];
 
 // Set up the plaid if necessary
 // Instead of showing two gabors, we can "merge" them together and draw a plaid. In that situation, the azimuth, elevation, sigma and radius of MappingGabor0 are used. We simply set the stimTypes of kMapGabor0 and kMapGabor1 to Null so that they are not displayed, and set up the plaid instead. Plaid uses stimOn, stimOff and Frame number (see below) of MappingGabor0.
@@ -394,11 +397,10 @@ playAudStim = [[task defaults] boolForKey:GRFPlayAudStimKey];
 
     if (convertToPlaid) {
         [self loadPlaid:plaid withStimDesc0:&stimDescs[kMapGabor0] withStimDesc1:&stimDescs[kMapGabor1]];
-        stimDescs[kMapGabor0].stimType=kNullStim;
-        stimDescs[kMapGabor1].stimType=kNullStim;
+        stimDescs[kMapGabor0].stimType=kPlaidStim;
+        stimDescs[kMapGabor1].stimType=kPlaidStim;
     }
     
-    [gabors makeObjectsPerformSelector:@selector(store)];
     [plaid store];
     
     // Set up the targetSpot if needed
@@ -411,14 +413,32 @@ playAudStim = [[task defaults] boolForKey:GRFPlayAudStimKey];
         [targetSpot setShape:kLLCircle];
         [targetColor release];
     }
-*/	
+*/
+    
+// Set up the auditory stimulus if necessary [MD 25/04/2015]
+    playAudStim = [[task defaults] boolForKey:GRFPlayAudStimKey];
+    kMapGaborAV = kMapGabor1; // Auditory gabor. This is presently mapped to the properties of the right gabor.
+    
+    if (playAudStim) {
+        
+        // update player with the required sound stimulus
+        audStim = [self updateAuditoryGaborWithGabor:&stimDescs[kMapGaborAV]];
+        [player getSoundForGabor:audStim fromDir:soundsDir];
+        
+        // Changes in stimDescs that would indicate presence of auditory stimulus in LL data
+        stimDescs[kMapGaborAV].stimType = audStim.stimType;
+    }
+
+    
 	targetOnFrame = -1;
 
     for (trialFrame = taskGaborFrame = 0; !listDone && !abortStimuli; trialFrame++) {
 		glClear(GL_COLOR_BUFFER_BIT);
 		for (index = 0; index < kGabors; index++) {
 			if (trialFrame >= stimDescs[index].stimOnFrame && trialFrame < stimDescs[index].stimOffFrame) {
-				if (stimDescs[index].stimType != kNullStim && stimDescs[index].stimType !=kAudStim) {
+                
+                // Visual Stimuli
+				if (stimDescs[index].stimType != kNullStim && stimDescs[index].stimType != kPlaidStim && stimDescs[index].stimType !=kAudStim) {
                     theGabor = [gabors objectAtIndex:index];
                     [theGabor directSetFrame:[NSNumber numberWithLong:gaborFrames[index]]];	// advance for temporal modulation
                     [theGabor draw];
@@ -434,21 +454,9 @@ playAudStim = [[task defaults] boolForKey:GRFPlayAudStimKey];
                 // Loop for visual stimuli (gabors) ends here. Loop for auditory stimulus begins next. Hence gaborFrames[index] is incremented after auditory stimulus. [MD 25/04/2015]
                 
                 // Auditory Stimulus. This is played only if Auditory Stimulus check-box is checked. [MD 25/04/2015]
-                int kMapGaborAV = kMapGabor1; // Auditory gabor. This is presently mapped to the properties of the right gabor.
-                if (playAudStim && index == kMapGaborAV && gaborFrames[kMapGaborAV] == 0){
-                    
-                    // Play the required sound stimulus                    
-                    [player getSoundForGabor:stimDescs[kMapGabor1] fromDir:soundsDir];
-                    [player startPlay];
-                    
-                    // Changes in stimDescs that would indicate presence of auditory stimulus in LL data
-                    if (stimDescs[kMapGaborAV].stimType == kNullStim) {
-                        stimDescs[kMapGaborAV].stimType = kAudStim; // Only Auditory stimulus for this gabor
-                    }
-                    else if (stimDescs[kMapGaborAV].stimType == kValidStim) {
-                        stimDescs[kMapGaborAV].stimType = kVisAudStim; // Both Auditory and visual stimuli mapped to the same gabor
-                    }
-                    
+
+                if (playAudStim && index == kMapGaborAV && gaborFrames[kMapGaborAV] == 0) {
+                    [player startPlay]; // start playback
                 }
                 
                 // Increment gaborFrames here
@@ -567,9 +575,20 @@ playAudStim = [[task defaults] boolForKey:GRFPlayAudStimKey];
                     
                     if (convertToPlaid) {
                         [self loadPlaid:plaid withStimDesc0:&stimDescs[kMapGabor0] withStimDesc1:&stimDescs[kMapGabor1]];
-                        stimDescs[kMapGabor0].stimType=kNullStim;
-                        stimDescs[kMapGabor1].stimType=kNullStim;
+                        stimDescs[kMapGabor0].stimType=kPlaidStim;
+                        stimDescs[kMapGabor1].stimType=kPlaidStim;
                     }
+                    
+                    if (playAudStim && index == kMapGaborAV) {
+                        
+                        // update player with the required sound stimulus
+                        audStim = [self updateAuditoryGaborWithGabor:&stimDescs[kMapGaborAV]];
+                        [player getSoundForGabor:audStim fromDir:soundsDir];
+                        
+                        // Changes in stimDescs that would indicate presence of auditory stimulus in LL data
+                        stimDescs[kMapGaborAV].stimType = audStim.stimType;
+                    }
+                    
 				}
              
                 // Every time fresh gabors are selected, we need to store them because otherwise counterphasing option would keep using the baseGabor of the first gabor.
@@ -577,13 +596,6 @@ playAudStim = [[task defaults] boolForKey:GRFPlayAudStimKey];
                 [plaid store];
 			}
 		}
-    }
-    
-// If playing auditory stimulus, abort playing if abortStimuli or listDone is true [MD 25/04/2015]
-    if (playAudStim) {
-        if (abortStimuli || listDone){
-            [player stopPlay];
-        }
     }
     
     
@@ -605,9 +617,10 @@ playAudStim = [[task defaults] boolForKey:GRFPlayAudStimKey];
 //	[gabors makeObjectsPerformSelector:@selector(restore)];
 //  [plaid restore];
     
-    // Release all contents of the GRFSoundPlayer object player
-    [player stopPlay];
-    [player playerDeactivate];
+    // Pass a message to player to stop playing. If sound has not been terminated when this line is reached during runtime (eg. when abortStimuli becomes true) and playback has to be aborted prematurely, player will abort playing using its own routines implemented in GRFSoundObjects.m . [MD 06/04/2015]
+    if (playAudStim) {
+        [player stopPlay];
+    }
     
 	stimulusOn = abortStimuli = NO;
 	[stimLists release];
@@ -727,11 +740,40 @@ playAudStim = [[task defaults] boolForKey:GRFPlayAudStimKey];
     
     // If the MATLAB file is not found (and hence the Sounds directory could not be located), log a message
     if ([soundFolderPath isEqualToString:@""]) {
-        NSLog(@"Sounds directory could not be located as the search file %@ could not be found in the user's Documents directory.",searchFilename);
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert addButtonWithTitle:@"OK"];
+        [alert setAlertStyle:NSWarningAlertStyle];
+        [alert setMessageText:[@"Sounds directory could not be located as the search file " stringByAppendingString:[searchFilename stringByAppendingString:@" could not be found in the user's Documents directory."]]];
+        
+        if ([alert runModal] == NSAlertFirstButtonReturn) {
+            [alert release];
+        }
     }
     
     // Return the parent directory path
     return soundFolderPath;
 };
 
+-(AudStimDesc)updateAuditoryGaborWithGabor:(StimDesc *)pSD
+{
+    AudStimDesc AudStim;
+    
+    AudStim.stimDurationMS = [[task defaults] integerForKey:GRFMapStimDurationMSKey];
+    AudStim.protocolType = (int)(pSD->radiusDeg/[[task defaults] floatForKey:GRFMapStimRadiusSigmaRatioKey]);
+    AudStim.azimuthDeg = pSD->azimuthDeg;
+    AudStim.elevationDeg = pSD->elevationDeg;
+    AudStim.spatialFreqCPD = pSD->spatialFreqCPD;
+    AudStim.directionDeg = pSD->directionDeg;
+    AudStim.contrastPC = pSD->contrastPC;
+    AudStim.temporalFreqHz = pSD->temporalFreqHz;
+    
+    if (pSD->stimType == kNullStim) {
+        AudStim.stimType = kAudStim; // Only Auditory stimulus for this gabor
+    }
+    else if (pSD->stimType == kValidStim || pSD->stimType == kPlaidStim) {
+        AudStim.stimType = kVisAudStim; // Both Auditory and visual stimuli mapped to this gabor
+    }
+    
+    return AudStim;
+}
 @end
