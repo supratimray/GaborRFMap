@@ -7,8 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "GRFSoundObjects.h"
-#import "GRF.h"
 
 // Define the class
 @class GRFSoundPlayer;
@@ -24,7 +22,7 @@
 
 // Define the instance variables associated with the class
 {
-    GRFSoundObjects *soundObject;
+//    GRFSoundObjects *soundObject;
     NSArray         *soundDetails;
     NSString        *soundPath;
     NSString        *soundFile;
@@ -38,7 +36,6 @@
 -(void)playerDeactivate;
 -(void)stopPlay;
 -(void)startPlay;
--(void)getSoundForGabor:(StimDesc)pSD fromDir:(NSString*)soundsDir;
 
 // Assign properties of the delegate.
 @property (nonatomic,assign) id<GRFSoundPlayerDelegate> delegate;

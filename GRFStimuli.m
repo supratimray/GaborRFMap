@@ -8,7 +8,6 @@ March 29, 2003 JHRM
 #import "GaborRFMap.h"
 #import "GRFStimuli.h"
 #import "UtilityFunctions.h"
-#import "GRFSoundPlayer.h"
 
 #define kDefaultDisplayIndex	1		// Index of stim display when more than one display
 #define kMainDisplayIndex		0		// Index of main stimulus display
@@ -38,6 +37,7 @@ NSString *stimulusMonitorID = @"GaborRFMap Stimulus";
     [targetSpot release];
     [gabors release];
     [plaid release];
+    [player release];
 
     [super dealloc];
 }
@@ -108,6 +108,7 @@ NSString *stimulusMonitorID = @"GaborRFMap Stimulus";
     
     // Get the location of the sounds directory when Knot is initiated [MD 25/04/2015]
     soundsDir = [[NSString alloc] initWithString:[self getSoundFolder]];
+    player = [[NSSound alloc] init];
 
 	return self;
 }
@@ -361,15 +362,14 @@ by mapStimTable.
     BOOL convertToPlaid;
     // local variables related to auditory stimulus [MD 25/04/2015]
     BOOL playAudStim;
-    GRFSoundPlayer *player = [[GRFSoundPlayer alloc] init];
-	
+    int kMapGaborAV = kMapGabor1; // Auditory stimulus. This is presently mapped to the properties of the right gabor.
+    NSString *soundFile;
+    float soundVolume;
+    
     threadPool = [[NSAutoreleasePool alloc] init];		// create a threadPool for this thread
 	[LLSystemUtil setThreadPriorityPeriodMS:1.0 computationFraction:0.250 constraintFraction:1.0];
 	
 	stimLists = [[NSArray arrayWithObjects:taskStimList, mapStimList0, mapStimList1, nil] retain];
-    
-// check the state of 'Auditory Stimulus' check-box [MD 25/04/2015]
-playAudStim = [[task defaults] boolForKey:GRFPlayAudStimKey];
 
 // Set up the stimulus calibration, including the offset then present the stimulus sequence
 
@@ -386,6 +386,8 @@ playAudStim = [[task defaults] boolForKey:GRFPlayAudStimKey];
 		[self loadGabor:[gabors objectAtIndex:index] withStimDesc:&stimDescs[index]];
 		stimOffFrames[index] = stimDescs[index].stimOffFrame;
 	}
+    
+    [gabors makeObjectsPerformSelector:@selector(store)];
 
 // Set up the plaid if necessary
 // Instead of showing two gabors, we can "merge" them together and draw a plaid. In that situation, the azimuth, elevation, sigma and radius of MappingGabor0 are used. We simply set the stimTypes of kMapGabor0 and kMapGabor1 to Null so that they are not displayed, and set up the plaid instead. Plaid uses stimOn, stimOff and Frame number (see below) of MappingGabor0.
@@ -394,12 +396,27 @@ playAudStim = [[task defaults] boolForKey:GRFPlayAudStimKey];
 
     if (convertToPlaid) {
         [self loadPlaid:plaid withStimDesc0:&stimDescs[kMapGabor0] withStimDesc1:&stimDescs[kMapGabor1]];
-        stimDescs[kMapGabor0].stimType=kNullStim;
-        stimDescs[kMapGabor1].stimType=kNullStim;
+        stimDescs[kMapGabor0].stimType=kPlaidStim;
+        stimDescs[kMapGabor1].stimType=kPlaidStim;
     }
     
-    [gabors makeObjectsPerformSelector:@selector(store)];
     [plaid store];
+    
+// check the state of 'Auditory Stimulus' check-box [MD 25/04/2015]
+    playAudStim = [[task defaults] boolForKey:GRFPlayAudStimKey];
+    
+    if (playAudStim) {
+    // Changes in stimDescs that would indicate presence of auditory stimulus in LL data
+        if (stimDescs[kMapGaborAV].stimType == kNullStim) {
+            stimDescs[kMapGaborAV].stimType = kAudStim; // Only Auditory stimulus for this gabor
+        }
+        else if (stimDescs[kMapGaborAV].stimType == kValidStim) {
+            stimDescs[kMapGaborAV].stimType = kVisAudStim; // Both Auditory and visual stimuli mapped to the same gabor
+        }
+        
+        soundFile = [self getSoundFile:stimDescs[kMapGaborAV]];
+        soundVolume = [self getSoundVolume:stimDescs[kMapGaborAV]];
+    }
     
     // Set up the targetSpot if needed
 /*
@@ -418,7 +435,9 @@ playAudStim = [[task defaults] boolForKey:GRFPlayAudStimKey];
 		glClear(GL_COLOR_BUFFER_BIT);
 		for (index = 0; index < kGabors; index++) {
 			if (trialFrame >= stimDescs[index].stimOnFrame && trialFrame < stimDescs[index].stimOffFrame) {
-				if (stimDescs[index].stimType != kNullStim && stimDescs[index].stimType !=kAudStim) {
+                
+                // Visual Stimuli
+				if (stimDescs[index].stimType != kNullStim && stimDescs[index].stimType != kPlaidStim && stimDescs[index].stimType !=kAudStim) {
                     theGabor = [gabors objectAtIndex:index];
                     [theGabor directSetFrame:[NSNumber numberWithLong:gaborFrames[index]]];	// advance for temporal modulation
                     [theGabor draw];
@@ -434,21 +453,13 @@ playAudStim = [[task defaults] boolForKey:GRFPlayAudStimKey];
                 // Loop for visual stimuli (gabors) ends here. Loop for auditory stimulus begins next. Hence gaborFrames[index] is incremented after auditory stimulus. [MD 25/04/2015]
                 
                 // Auditory Stimulus. This is played only if Auditory Stimulus check-box is checked. [MD 25/04/2015]
-                int kMapGaborAV = kMapGabor1; // Auditory gabor. This is presently mapped to the properties of the right gabor.
-                if (playAudStim && index == kMapGaborAV && gaborFrames[kMapGaborAV] == 0){
+                
+                if (playAudStim && (index == kMapGaborAV) && (gaborFrames[kMapGaborAV] == 0)){
                     
                     // Play the required sound stimulus                    
-                    [player getSoundForGabor:stimDescs[kMapGabor1] fromDir:soundsDir];
-                    [player startPlay];
-                    
-                    // Changes in stimDescs that would indicate presence of auditory stimulus in LL data
-                    if (stimDescs[kMapGaborAV].stimType == kNullStim) {
-                        stimDescs[kMapGaborAV].stimType = kAudStim; // Only Auditory stimulus for this gabor
-                    }
-                    else if (stimDescs[kMapGaborAV].stimType == kValidStim) {
-                        stimDescs[kMapGaborAV].stimType = kVisAudStim; // Both Auditory and visual stimuli mapped to the same gabor
-                    }
-                    
+                    player = [[[NSSound alloc] initWithContentsOfFile:soundFile byReference:NO] retain];
+                    [player setVolume:[[NSString stringWithFormat:@"%.02f", soundVolume] floatValue]];
+                    [player play];
                 }
                 
                 // Increment gaborFrames here
@@ -567,8 +578,22 @@ playAudStim = [[task defaults] boolForKey:GRFPlayAudStimKey];
                     
                     if (convertToPlaid) {
                         [self loadPlaid:plaid withStimDesc0:&stimDescs[kMapGabor0] withStimDesc1:&stimDescs[kMapGabor1]];
-                        stimDescs[kMapGabor0].stimType=kNullStim;
-                        stimDescs[kMapGabor1].stimType=kNullStim;
+                        stimDescs[kMapGabor0].stimType=kPlaidStim;
+                        stimDescs[kMapGabor1].stimType=kPlaidStim;
+                    }
+                    
+                    if (playAudStim && index == kMapGaborAV) {
+                        
+                        // Changes in stimDescs that would indicate presence of auditory stimulus in LL data
+                        if (stimDescs[kMapGaborAV].stimType == kNullStim) {
+                            stimDescs[kMapGaborAV].stimType = kAudStim; // Only Auditory stimulus for this gabor
+                        }
+                        else if (stimDescs[kMapGaborAV].stimType == kValidStim) {
+                            stimDescs[kMapGaborAV].stimType = kVisAudStim; // Both Auditory and visual stimuli mapped to the same gabor
+                        }
+                        
+                        soundFile = [self getSoundFile:stimDescs[kMapGaborAV]];
+                        soundVolume = [self getSoundVolume:stimDescs[kMapGaborAV]];
                     }
 				}
              
@@ -577,13 +602,6 @@ playAudStim = [[task defaults] boolForKey:GRFPlayAudStimKey];
                 [plaid store];
 			}
 		}
-    }
-    
-// If playing auditory stimulus, abort playing if abortStimuli or listDone is true [MD 25/04/2015]
-    if (playAudStim) {
-        if (abortStimuli || listDone){
-            [player stopPlay];
-        }
     }
     
     
@@ -605,9 +623,10 @@ playAudStim = [[task defaults] boolForKey:GRFPlayAudStimKey];
 //	[gabors makeObjectsPerformSelector:@selector(restore)];
 //  [plaid restore];
     
-    // Release all contents of the GRFSoundPlayer object player
-    [player stopPlay];
-    [player playerDeactivate];
+    // If playing auditory stimulus, abort playing
+    if (playAudStim) {
+        [player stop];
+    }
     
 	stimulusOn = abortStimuli = NO;
 	[stimLists release];
@@ -704,6 +723,48 @@ playAudStim = [[task defaults] boolForKey:GRFPlayAudStimKey];
 - (LLGabor *)taskGabor;
 {
 	return [gabors objectAtIndex:kTaskGabor];
+}
+
+
+// Auditory Stimulus related methods
+
+-(NSString*)getSoundFile:(StimDesc)pSD
+{
+    NSString *soundName = [[NSString alloc] initWithString:@""];
+    NSString *soundFile;
+
+    int protocolType = (int)(pSD.radiusDeg/[[[task defaults] objectForKey:GRFMapStimRadiusSigmaRatioKey] floatValue]);
+    int stimulusDuration = ([[task defaults] integerForKey:GRFMapStimDurationMSKey]);
+    
+    if (protocolType == 1) { // Stationary and Moving Ripples protocols (eye open and closed state, both)
+        int stimType=1;
+        soundName = [NSString stringWithFormat:@"Azi_%.1f%@%.1f%@%.0d%@%.1f%@%.0f%@%.1f%@%.1f%@%.0d.wav",(pSD.azimuthDeg),@"_Elev_",(pSD.elevationDeg),@"_Type_",stimType,@"_RF_",(pSD.spatialFreqCPD),@"_RP_",(pSD.directionDeg),@"_MD_",(pSD.contrastPC/100),@"_RV_",(pSD.temporalFreqHz),@"_Dur_",stimulusDuration];
+    }
+    else if (protocolType == 2){ // Sinusoidal Amplitude Modulated sounds Protocol
+        int stimType = 2; // SAM sounds
+        soundName = [NSString stringWithFormat:@"Azi_%.1f_%@_%.1f_%@_%.0d_%@_%.1f_%@_%.0f_%@_%.1f_%@_%.1f_%@_%.0d.wav",(pSD.azimuthDeg),@"Elev",(pSD.elevationDeg),@"Type",stimType,@"RF",(pSD.spatialFreqCPD),@"RP",(pSD.directionDeg),@"MD",(pSD.contrastPC/100),@"RV",(pSD.temporalFreqHz),@"Dur",stimulusDuration];
+    }
+    else if (protocolType == 3){ // Ripples protocol with varying volume with and without visual stimuli of different contrasts
+        int stimType = 1; // Ripple sounds
+        soundName = [NSString stringWithFormat:@"Azi_%.1f_%@_%.1f_%@_%.0d_%@_%.1f_%@_%.0f_%@_%.1f_%@_%.1f_%@_%.0d.wav",(pSD.azimuthDeg),@"Elev",(pSD.elevationDeg),@"Type",stimType,@"RF",(pSD.spatialFreqCPD),@"RP",(pSD.directionDeg),@"MD",0.9,@"RV",(pSD.temporalFreqHz),@"Dur",stimulusDuration]; // Modulation depth is fixed at 0.9
+    }
+    else if (protocolType == 10) { // Noise burst protocol
+        soundName = [NSString stringWithFormat:@"Noise_Dur_%.0d.wav",stimulusDuration];
+    }
+    
+    soundFile = [[NSString alloc] initWithString:[[soundsDir stringByAppendingPathComponent:@"Sounds"] stringByAppendingPathComponent:soundName]];
+    return soundFile;
+}
+
+- (float)getSoundVolume:(StimDesc)pSD {
+    
+    float stimVolume = 1.0; // Volume is initialized at 100%
+    int protocolType = (int)(pSD.radiusDeg/[[[task defaults] objectForKey:GRFMapStimRadiusSigmaRatioKey] floatValue]);
+    
+    if (protocolType == 3) {
+        stimVolume = (pSD.contrastPC/100); // Volume is varying, mapped to contrast of the specific gabor
+    }
+    return stimVolume;
 }
 
 -(NSString*)getSoundFolder // [MD 25/04/2015]

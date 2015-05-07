@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5DC1B2D91AEBD2460066BF1A /* GRFSoundObjects.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DC1B2D81AEBD2460066BF1A /* GRFSoundObjects.m */; };
 		5DDC7B761AF634D0001781F6 /* GRFSoundPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DDC7B751AF634D0001781F6 /* GRFSoundPlayer.m */; };
 		692E5AAF0CDBECE300E0BCB8 /* GRFMapStimTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 692E5AAE0CDBECE300E0BCB8 /* GRFMapStimTable.m */; };
 		693BB74215C8005500390101 /* Lablib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 693BB74115C8005500390101 /* Lablib.framework */; };
@@ -81,8 +80,6 @@
 		29B97319FDCFA39411CA2CEA /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/GaborRFMap.nib; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		5DC1B2D71AEBD2460066BF1A /* GRFSoundObjects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRFSoundObjects.h; sourceTree = "<group>"; };
-		5DC1B2D81AEBD2460066BF1A /* GRFSoundObjects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRFSoundObjects.m; sourceTree = "<group>"; };
 		5DDC7B741AF634D0001781F6 /* GRFSoundPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRFSoundPlayer.h; sourceTree = "<group>"; };
 		5DDC7B751AF634D0001781F6 /* GRFSoundPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRFSoundPlayer.m; sourceTree = "<group>"; };
 		690B798D047ADA9F00A80164 /* GRFBehaviorController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = GRFBehaviorController.h; sourceTree = "<group>"; };
@@ -322,8 +319,6 @@
 				69EAD87004352E4F00F95509 /* GRFStimuli.m */,
 				692E5AAD0CDBECE300E0BCB8 /* GRFMapStimTable.h */,
 				692E5AAE0CDBECE300E0BCB8 /* GRFMapStimTable.m */,
-				5DC1B2D71AEBD2460066BF1A /* GRFSoundObjects.h */,
-				5DC1B2D81AEBD2460066BF1A /* GRFSoundObjects.m */,
 				5DDC7B741AF634D0001781F6 /* GRFSoundPlayer.h */,
 				5DDC7B751AF634D0001781F6 /* GRFSoundPlayer.m */,
 			);
@@ -455,7 +450,6 @@
 				69E24E3A07A5C2A100DDC096 /* GRFIntertrialState.m in Sources */,
 				69E24E3C07A5C2A300DDC096 /* GRFStimulate.m in Sources */,
 				69E24E4407A5C2AC00DDC096 /* GRFReactState.m in Sources */,
-				5DC1B2D91AEBD2460066BF1A /* GRFSoundObjects.m in Sources */,
 				69E24E4607A5C2AE00DDC096 /* GRFSaccadeState.m in Sources */,
 				69E24E4A07A5C2B000DDC096 /* GRFStarttrialState.m in Sources */,
 				69E24E4C07A5C2B200DDC096 /* GRFStopState.m in Sources */,

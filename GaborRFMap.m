@@ -486,7 +486,7 @@ long                trialCounter;
 	[collectorTimer invalidate];
     [dataDoc removeObserver:stateSystem];
     [dataDoc removeObserver:behaviorController];
-    [dataDoc removeObserver:spikeController];
+//    [dataDoc removeObserver:spikeController];
     [dataDoc removeObserver:eyeXYController];
     [dataDoc removeObserver:summaryController];
     [dataDoc removeObserver:xtController];
@@ -501,8 +501,8 @@ long                trialCounter;
 
     [behaviorController close];
     [behaviorController release];
-    [spikeController close];
-    [spikeController release];
+//    [spikeController close];
+//    [spikeController release];
     [eyeXYController deactivate];			// requires a special call
     [eyeXYController release];
     [summaryController close];

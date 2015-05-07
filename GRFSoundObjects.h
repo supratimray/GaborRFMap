@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "GRF.h"
+//extern StimDesc pSD;
 
 @interface GRFSoundObjects : NSObject
 
