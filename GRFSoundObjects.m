@@ -12,21 +12,20 @@
 
 //////////////////////////////// Do not change the following code unless necessary ////////////////////////////////////
 
--(id)init
+-(void)setDir:(NSString*)dir;
+{
+    soundsDir = [[NSString alloc] initWithString:dir];
+}
+
+-(id)init;
 {
     soundName = [[NSString alloc] init];
     soundFile = [[NSString alloc] init];
     return self;
 }
 
--(void)dealloc
+-(void)getSoundForGabor:(AudStimDesc)pSD
 {
-    [super dealloc];
-}
-
--(void)getSoundForGabor:(AudStimDesc)pSD fromDir:(NSString*)soundsDir
-{
-
     // Get stimulus duration and protocol type
     stimulusDuration = pSD.stimDurationMS;
     int protocolType = pSD.protocolType;
@@ -62,9 +61,11 @@
 // Use the following NSSoundDelegate method to release player after playback. This method gets invoked automatically once playback is over or is stopped.
 -(void)sound:(NSSound *)sound didFinishPlaying:(BOOL)aBool
 {
-    playerDone = YES;
-    [sound setDelegate:nil];
-    [sound release];
+    if (aBool) {
+        playerDone = YES;
+        [sound setDelegate:nil];
+        [sound release];
+    }    
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////

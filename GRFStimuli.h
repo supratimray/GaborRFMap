@@ -4,6 +4,7 @@ GRFStimuli.h
 
 #import "GRF.h"
 #import "GRFMapStimTable.h"
+#import "GRFSoundObjects.h"
 
 @interface GRFStimuli : NSObject {
 
@@ -28,7 +29,7 @@ GRFStimuli.h
     LLFixTarget				*targetSpot;
 //	LLGabor 				*taskGabor;
     LLPlaid                 *plaid;
-    NSString                *soundsDir;
+    GRFSoundObjects         *player;
 }
 
 - (void)doFixSettings;

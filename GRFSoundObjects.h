@@ -33,12 +33,13 @@ typedef struct AudStimDesc {
     NSSound                 *player;
     NSString                *soundName;    
     NSString                *soundFile;
+    NSString                *soundsDir;
 }
 
 // Only the following Methods of this object are accessible to other classes.
 -(id)init;
--(void)dealloc;
--(void)getSoundForGabor:(AudStimDesc)pSD fromDir:(NSString*)soundsDir;
+-(void)setDir:(NSString*)dir;
+-(void)getSoundForGabor:(AudStimDesc)pSD;
 -(void)startPlay;
 -(void)stopPlay;
 

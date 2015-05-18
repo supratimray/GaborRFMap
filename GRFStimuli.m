@@ -8,7 +8,6 @@ March 29, 2003 JHRM
 #import "GaborRFMap.h"
 #import "GRFStimuli.h"
 #import "UtilityFunctions.h"
-#import "GRFSoundObjects.h"
 
 #define kDefaultDisplayIndex	1		// Index of stim display when more than one display
 #define kMainDisplayIndex		0		// Index of main stimulus display
@@ -25,7 +24,6 @@ March 29, 2003 JHRM
 #define kAdjusted(color, contrast)  (kMidGray + (color - kMidGray) / 100.0 * contrast)
 
 NSString *stimulusMonitorID = @"GaborRFMap Stimulus";
-GRFSoundObjects          *player;
 
 @implementation GRFStimuli
 
@@ -39,7 +37,7 @@ GRFSoundObjects          *player;
     [targetSpot release];
     [gabors release];
     [plaid release];
-    [player dealloc];
+    [player release];
 
     [super dealloc];
 }
@@ -109,8 +107,8 @@ GRFSoundObjects          *player;
     [plaid setAchromatic:YES];
     
     // Get the location of the sounds directory and init player object when Knot is initiated [MD 25/04/2015]
-    soundsDir = [[NSString alloc] initWithString:[self getSoundFolder]];
     player = [[GRFSoundObjects alloc] init];
+    [player setDir:[self getSoundFolder]];
 
 	return self;
 }
@@ -417,13 +415,15 @@ by mapStimTable.
     
 // Set up the auditory stimulus if necessary [MD 25/04/2015]
     playAudStim = [[task defaults] boolForKey:GRFPlayAudStimKey];
-    kMapGaborAV = kMapGabor1; // Auditory gabor. This is presently mapped to the properties of the right gabor.
     
     if (playAudStim) {
         
+        // Auditory gabor. This is presently mapped to the properties of the right gabor.
+        kMapGaborAV = kMapGabor1;
+        
         // update player with the required sound stimulus
         audStim = [self updateAuditoryGaborWithGabor:&stimDescs[kMapGaborAV]];
-        [player getSoundForGabor:audStim fromDir:soundsDir];
+        [player getSoundForGabor:audStim];
         
         // Changes in stimDescs that would indicate presence of auditory stimulus in LL data
         stimDescs[kMapGaborAV].stimType = audStim.stimType;
@@ -583,7 +583,7 @@ by mapStimTable.
                         
                         // update player with the required sound stimulus
                         audStim = [self updateAuditoryGaborWithGabor:&stimDescs[kMapGaborAV]];
-                        [player getSoundForGabor:audStim fromDir:soundsDir];
+                        [player getSoundForGabor:audStim];
                         
                         // Changes in stimDescs that would indicate presence of auditory stimulus in LL data
                         stimDescs[kMapGaborAV].stimType = audStim.stimType;
@@ -597,8 +597,7 @@ by mapStimTable.
 			}
 		}
     }
-    
-    
+	
 // If there was no target (catch trial), we nevertheless need to set a valid targetOnFrame time (now)
 
 	targetOnFrame = (targetOnFrame < 0) ? trialFrame : targetOnFrame;
@@ -617,7 +616,7 @@ by mapStimTable.
 //	[gabors makeObjectsPerformSelector:@selector(restore)];
 //  [plaid restore];
     
-    // Pass a message to player to stop playing. If sound has not been terminated when this line is reached during runtime (eg. when abortStimuli becomes true) and playback has to be aborted prematurely, player will abort playing using its own routines implemented in GRFSoundObjects.m . [MD 06/04/2015]
+// Pass a message to player to stop playing. If sound has not been terminated when this line is reached during runtime (eg. when abortStimuli becomes true) and playback has to be aborted prematurely, player will abort playing using its own routines implemented in GRFSoundObjects.m . [MD 06/04/2015]
     if (playAudStim) {
         [player stopPlay];
     }
