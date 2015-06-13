@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5DDC7B761AF634D0001781F6 /* GRFSoundPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DDC7B751AF634D0001781F6 /* GRFSoundPlayer.m */; };
+		5DC1B2D91AEBD2460066BF1A /* GRFSoundObjects.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DC1B2D81AEBD2460066BF1A /* GRFSoundObjects.m */; };
 		692E5AAF0CDBECE300E0BCB8 /* GRFMapStimTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 692E5AAE0CDBECE300E0BCB8 /* GRFMapStimTable.m */; };
 		693BB74215C8005500390101 /* Lablib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 693BB74115C8005500390101 /* Lablib.framework */; };
 		695982D1080209EB0090B9A6 /* GRFFixGraceState.h in Resources */ = {isa = PBXBuildFile; fileRef = 695982CF080209EB0090B9A6 /* GRFFixGraceState.h */; };
@@ -80,8 +80,8 @@
 		29B97319FDCFA39411CA2CEA /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/GaborRFMap.nib; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		5DDC7B741AF634D0001781F6 /* GRFSoundPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRFSoundPlayer.h; sourceTree = "<group>"; };
-		5DDC7B751AF634D0001781F6 /* GRFSoundPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRFSoundPlayer.m; sourceTree = "<group>"; };
+		5DC1B2D71AEBD2460066BF1A /* GRFSoundObjects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRFSoundObjects.h; sourceTree = "<group>"; };
+		5DC1B2D81AEBD2460066BF1A /* GRFSoundObjects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRFSoundObjects.m; sourceTree = "<group>"; };
 		690B798D047ADA9F00A80164 /* GRFBehaviorController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = GRFBehaviorController.h; sourceTree = "<group>"; };
 		690B798E047ADA9F00A80164 /* GRFBehaviorController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = GRFBehaviorController.m; sourceTree = "<group>"; };
 		690B7992047ADABA00A80164 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/GRFXTController.nib; sourceTree = "<group>"; };
@@ -319,8 +319,8 @@
 				69EAD87004352E4F00F95509 /* GRFStimuli.m */,
 				692E5AAD0CDBECE300E0BCB8 /* GRFMapStimTable.h */,
 				692E5AAE0CDBECE300E0BCB8 /* GRFMapStimTable.m */,
-				5DDC7B741AF634D0001781F6 /* GRFSoundPlayer.h */,
-				5DDC7B751AF634D0001781F6 /* GRFSoundPlayer.m */,
+				5DC1B2D71AEBD2460066BF1A /* GRFSoundObjects.h */,
+				5DC1B2D81AEBD2460066BF1A /* GRFSoundObjects.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -450,13 +450,13 @@
 				69E24E3A07A5C2A100DDC096 /* GRFIntertrialState.m in Sources */,
 				69E24E3C07A5C2A300DDC096 /* GRFStimulate.m in Sources */,
 				69E24E4407A5C2AC00DDC096 /* GRFReactState.m in Sources */,
+				5DC1B2D91AEBD2460066BF1A /* GRFSoundObjects.m in Sources */,
 				69E24E4607A5C2AE00DDC096 /* GRFSaccadeState.m in Sources */,
 				69E24E4A07A5C2B000DDC096 /* GRFStarttrialState.m in Sources */,
 				69E24E4C07A5C2B200DDC096 /* GRFStopState.m in Sources */,
 				69E24E5107A5C2BD00DDC096 /* main.m in Sources */,
 				69E24E5307A5C2BE00DDC096 /* UtilityFunctions.m in Sources */,
 				695982D2080209EB0090B9A6 /* GRFFixGraceState.m in Sources */,
-				5DDC7B761AF634D0001781F6 /* GRFSoundPlayer.m in Sources */,
 				69BDCE44098BD2CA00578E91 /* GRFSpikeController.m in Sources */,
 				695C12F709B108880021A27D /* GRFFixateState.m in Sources */,
 				AF0220F80B37000B0029778E /* GRFTooFastState.m in Sources */,

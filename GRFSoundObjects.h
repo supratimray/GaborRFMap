@@ -7,18 +7,46 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "GRF.h"
-//extern StimDesc pSD;
 
-@interface GRFSoundObjects : NSObject
+// Define AudStimDesc struct here
+
+typedef struct AudStimDesc {
+    int     stimDurationMS;
+	int     protocolType;
+    int     stimType;
+	float	azimuthDeg;
+	float	elevationDeg;
+	float	spatialFreqCPD;
+	float	directionDeg;
+    float	contrastPC;
+    float   temporalFreqHz;
+} AudStimDesc;
+
+@interface GRFSoundObjects : NSObject <NSSoundDelegate>
+
+// A GRFSoundObjects object consists of the following objects within it:
 
 {
     int                     stimulusDuration;
+    BOOL                    playerDone;
+    float                   stimVolume;
+    NSSound                 *player;
+    NSString                *soundName;    
+    NSString                *soundFile;
+    NSString                *soundsDir;
 }
 
-// Only the following Method is accessible to other classes. This returns an array of a string that contains the name of the sound file and a number that contains protocol-specific volume
--(NSArray*)getSoundDetailsforGabor:(StimDesc)pSD;
+// Only the following Methods of this object are accessible to other classes.
+-(id)init;
+-(void)setDir:(NSString*)dir;
+-(void)getSoundForGabor:(AudStimDesc)pSD;
+-(void)startPlay;
+-(void)stopPlay;
+
+
+// NSSoundDelegate method {-(void)sound:(NSSound *)sound didFinishPlaying:(BOOL)aBool} is declared in NSSound and should need not be redeclared here. However, it needs to be implemented in GRFSoundObjects.m
 
 // Protocol-specific methods are declared in GRFSoundObjects.m, and are not accessible to other classes
 
 @end
+
