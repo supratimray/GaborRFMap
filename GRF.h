@@ -172,6 +172,7 @@ extern NSString *GRFCatchTrialMaxPCKey;
 extern NSString *GRFCueMSKey;
 //extern NSString *GRFChageScaleKey;
 extern NSString *GRFDoSoundsKey;
+extern NSString *GRFEyeFilterWeightKey;
 extern NSString *GRFFixateKey;
 extern NSString *GRFFixateMSKey;
 extern NSString *GRFFixateOnlyKey;

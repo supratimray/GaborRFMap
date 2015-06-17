@@ -286,6 +286,8 @@
 	<integer>3500</integer>
 	<key>GRFEyeXYWindowVisible</key>
 	<true/>
+	<key>GRFEyeFilterWeight</key>
+	<real>0.1</real>
 	<key>GRFEyeXYFadeDots</key>
 	<true/>
 	<key>GRFFixGraceMS</key>

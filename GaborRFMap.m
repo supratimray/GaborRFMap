@@ -28,6 +28,7 @@ NSString *GRFCatchTrialPCKey = @"GRFCatchTrialPC";
 NSString *GRFCatchTrialMaxPCKey = @"GRFCatchTrialMaxPC";
 NSString *GRFCueMSKey = @"GRFCueMS";
 NSString *GRFDoSoundsKey = @"GRFDoSounds";
+NSString *GRFEyeFilterWeightKey = @"GRFEyeFilterWeight";
 NSString *GRFFixateKey = @"GRFFixate";
 NSString *GRFFixateMSKey = @"GRFFixateMS";
 NSString *GRFFixateOnlyKey = @"GRFFixateOnly";
@@ -109,6 +110,7 @@ NSString *keyPaths[] = {@"values.GRFBlockLimit", @"values.GRFRespTimeMS",
 					@"values.GRFMinTargetMS", @"values.GRFMaxTargetMS", @"values.GRFChangeArray",
 					@"values.GRFChangeScale", @"values.GRFMeanTargetMS", @"values.GRFFixateMS",
 					@"values.GRFMapStimRadiusSigmaRatio",@"values.GRFHideTaskGabor",@"values.GRFHideLeft",@"values.GRFHideRight",
+                    @"values.GRFEyeFilterWeight",
 					nil};
 
 LLScheduleController	*scheduler = nil;
@@ -378,7 +380,10 @@ long                trialCounter;
 	[dataController assignTimestampData:VBLDataAssignment];
 	[dataController assignDigitalInputDevice:@"Synthetic"];
 	[dataController assignDigitalOutputDevice:@"Synthetic"];
-    
+    xFilter = [[LLFilterExp alloc] init];
+    [xFilter setStepWeight:(1.0 - [defaults floatForKey:GRFEyeFilterWeightKey])];
+    yFilter = [[LLFilterExp alloc] init];
+    [yFilter setStepWeight:(1.0 - [defaults floatForKey:GRFEyeFilterWeightKey])];
     
 	collectorTimer = [NSTimer scheduledTimerWithTimeInterval:0.004 target:self
 			selector:@selector(dataCollect:) userInfo:nil repeats:YES];
@@ -425,11 +430,13 @@ long                trialCounter;
 //	}
     
     if ((data = [dataController dataOfType:@"eyeLXData"]) != nil) {
+        data = [xFilter filteredValues:data];
 		[dataDoc putEvent:@"eyeLXData" withData:(Ptr)[data bytes] lengthBytes:[data length]];
 		currentEyesUnits[kLeftEye].x = *(short *)([data bytes] + [data length] - sizeof(short));
 	}
     
 	if ((data = [dataController dataOfType:@"eyeLYData"]) != nil) {
+        data = [yFilter filteredValues:data];
         [dataDoc putEvent:@"eyeLYData" withData:(Ptr)[data bytes] lengthBytes:[data length]];
 		currentEyesUnits[kLeftEye].y = *(short *)([data bytes] + [data length] - sizeof(short));
         currentEyesDeg[kLeftEye] = [eyeCalibrator degPointFromUnitPoint: currentEyesUnits[kLeftEye] forEye:kLeftEye];
@@ -438,10 +445,12 @@ long                trialCounter;
 		[dataDoc putEvent:@"eyeLPData" withData:(Ptr)[data bytes] lengthBytes:[data length]];
 	}
 	if ((data = [dataController dataOfType:@"eyeRXData"]) != nil) {
+        data = [xFilter filteredValues:data];
 		[dataDoc putEvent:@"eyeRXData" withData:(Ptr)[data bytes] lengthBytes:[data length]];
 		currentEyesUnits[kRightEye].x = *(short *)([data bytes] + [data length] - sizeof(short));
 	}
 	if ((data = [dataController dataOfType:@"eyeRYData"]) != nil) {
+        data = [yFilter filteredValues:data];
 		[dataDoc putEvent:@"eyeRYData" withData:(Ptr)[data bytes] lengthBytes:[data length]];
 		currentEyesUnits[kRightEye].y = *(short *)([data bytes] + [data length] - sizeof(short));
 		currentEyesDeg[kRightEye] = [eyeCalibrator degPointFromUnitPoint: currentEyesUnits[kRightEye] forEye:kRightEye];	}
@@ -484,6 +493,8 @@ long                trialCounter;
     [dataController setDataEnabled:[NSNumber numberWithBool:NO]];
     [stateSystem stop];
 	[collectorTimer invalidate];
+    [xFilter release];
+    [yFilter release];
     [dataDoc removeObserver:stateSystem];
     [dataDoc removeObserver:behaviorController];
 //    [dataDoc removeObserver:spikeController];
@@ -861,6 +872,10 @@ long                trialCounter;
     }
     else if ([key isEqualTo:GRFHideRightKey]) {
         [[task defaults] setBool:YES forKey:GRFHideRightDigitalKey];
+    }
+    else if ([key isEqualTo:GRFEyeFilterWeightKey]) {
+        [xFilter setStepWeight:(1.0 - [defaults floatForKey:GRFEyeFilterWeightKey])];
+        [yFilter setStepWeight:(1.0 - [defaults floatForKey:GRFEyeFilterWeightKey])];
     }
 }
 
