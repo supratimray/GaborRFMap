@@ -287,6 +287,9 @@ by mapStimTable.
     if (pSD->temporalFreqHz == [[task stimWindow] frameRateHz]/2) {
         [gabor directSetTemporalPhaseDeg:90.0];
     }
+    else {
+        [gabor directSetTemporalPhaseDeg:0.0];
+    }
 }
 
 - (void)loadPlaid:(LLPlaid *)pld withStimDesc0:(StimDesc *)pSD0 withStimDesc1:(StimDesc *)pSD1;
@@ -308,6 +311,9 @@ by mapStimTable.
     if (pSD0->temporalFreqHz == [[task stimWindow] frameRateHz]/2) {
         [pld directSetTemporalPhaseDeg0:90.0];
     }
+    else {
+        [pld directSetTemporalPhaseDeg0:0.0];
+    }
     
     if (pSD1->spatialFreqCPD == 0) {
         [pld directSetSpatialPhaseDeg1:90.0];
@@ -320,6 +326,9 @@ by mapStimTable.
     
     if (pSD1->temporalFreqHz == [[task stimWindow] frameRateHz]/2) {
         [pld directSetTemporalPhaseDeg1:90.0];
+    }
+    else {
+        [pld directSetTemporalPhaseDeg1:0.0];
     }
 }
 
