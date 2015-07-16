@@ -33,6 +33,8 @@
     
     if ([eventName isEqualTo:@"attendLoc"] || [eventName isEqualTo:@"AL"] )
         thisEventName = @"AL";
+    else if ([eventName isEqualTo:@"auditoryStimulus"] || [eventName isEqualTo:@"AS"] )
+        thisEventName = @"AS";
     else if ([eventName isEqualTo:@"azimuth"] || [eventName isEqualTo:@"AZ"] )
         thisEventName = @"AZ";
     else if ([eventName isEqualTo:@"break"] || [eventName isEqualTo:@"BR"] )

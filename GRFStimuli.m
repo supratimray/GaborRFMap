@@ -437,7 +437,6 @@ by mapStimTable.
         // Changes in stimDescs that would indicate presence of auditory stimulus in LL data
         stimDescs[kMapGaborAV].stimType = audStim.stimType;
     }
-
     
 	targetOnFrame = -1;
 
@@ -457,29 +456,24 @@ by mapStimTable.
                         [targetSpot draw];
                     }
 */
-                    
                 }
                 
-                // Loop for visual stimuli (gabors) ends here. Loop for auditory stimulus begins next. Hence gaborFrames[index] is incremented after auditory stimulus. [MD 25/04/2015]
+                if (convertToPlaid && index == kMapGabor0) {
+                    [plaid directSetFrame:[NSNumber numberWithLong:gaborFrames[index]]];	// advance for temporal modulation
+                    [plaid draw];
+                }
                 
                 // Auditory Stimulus. This is played only if Auditory Stimulus check-box is checked. [MD 25/04/2015]
 
-                if (playAudStim && index == kMapGaborAV && gaborFrames[kMapGaborAV] == 0) {
+                if (playAudStim && index == kMapGaborAV && gaborFrames[index] == 0) {
                     [player startPlay]; // start playback
+                    [digitalOut outputEventName:@"auditoryStimulus" withData:(long)(audStim.stimType)];
                 }
                 
                 // Increment gaborFrames here
                 gaborFrames[index]++;
 			}
 		}
-        
-        if (convertToPlaid) {
-            if (trialFrame >= stimDescs[kMapGabor0].stimOnFrame && trialFrame < stimDescs[kMapGabor0].stimOffFrame) {
-                [plaid directSetFrame:[NSNumber numberWithLong:gaborFrames[kMapGabor0]]];	// advance for temporal modulation
-                [plaid draw];
-                gaborFrames[kMapGabor0]++;
-            }
-        }
         
 		[fixSpot draw];
 		[[NSOpenGLContext currentContext] flushBuffer];
@@ -535,7 +529,7 @@ by mapStimTable.
 					}
 				}
                 
-                if (convertToPlaid) {
+                if (convertToPlaid && index == kMapGabor0) {
                     [digitalOut outputEventName:@"mappingPlaid" withData:(long)(pSD->stimType)];
                 }
 				
@@ -597,7 +591,6 @@ by mapStimTable.
                         // Changes in stimDescs that would indicate presence of auditory stimulus in LL data
                         stimDescs[kMapGaborAV].stimType = audStim.stimType;
                     }
-                    
 				}
              
                 // Every time fresh gabors are selected, we need to store them because otherwise counterphasing option would keep using the baseGabor of the first gabor.
