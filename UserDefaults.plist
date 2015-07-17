@@ -252,6 +252,8 @@
 	<false/>
 	<key>GRFConvertToPlaid</key>
 	<false/>
+	<key>GRFConvertToImage</key>
+	<false/>
 	<key>GRFUseSingleITC18</key>
 	<true/>
 	<key>GRFCueMS</key>

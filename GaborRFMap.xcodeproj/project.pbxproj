@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1139A3F91B5809E300495CF1 /* GRFImageStim.m in Sources */ = {isa = PBXBuildFile; fileRef = 1139A3F81B5809E300495CF1 /* GRFImageStim.m */; };
 		5DC1B2D91AEBD2460066BF1A /* GRFSoundObjects.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DC1B2D81AEBD2460066BF1A /* GRFSoundObjects.m */; };
 		692E5AAF0CDBECE300E0BCB8 /* GRFMapStimTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 692E5AAE0CDBECE300E0BCB8 /* GRFMapStimTable.m */; };
 		693BB74215C8005500390101 /* Lablib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 693BB74115C8005500390101 /* Lablib.framework */; };
@@ -76,6 +77,8 @@
 /* Begin PBXFileReference section */
 		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		1139A3F71B5809E300495CF1 /* GRFImageStim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRFImageStim.h; sourceTree = "<group>"; };
+		1139A3F81B5809E300495CF1 /* GRFImageStim.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRFImageStim.m; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		29B97319FDCFA39411CA2CEA /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/GaborRFMap.nib; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
@@ -315,6 +318,8 @@
 				69E247CA07A5562500DDC096 /* GaborRFMap.m */,
 				FC1EC3790F5F3E9800C95582 /* GRFDigitalOut.h */,
 				FC1EC3720F5F3E6300C95582 /* GRFDigitalOut.m */,
+				1139A3F71B5809E300495CF1 /* GRFImageStim.h */,
+				1139A3F81B5809E300495CF1 /* GRFImageStim.m */,
 				69EAD86F04352E4F00F95509 /* GRFStimuli.h */,
 				69EAD87004352E4F00F95509 /* GRFStimuli.m */,
 				692E5AAD0CDBECE300E0BCB8 /* GRFMapStimTable.h */,
@@ -452,6 +457,7 @@
 				69E24E4407A5C2AC00DDC096 /* GRFReactState.m in Sources */,
 				5DC1B2D91AEBD2460066BF1A /* GRFSoundObjects.m in Sources */,
 				69E24E4607A5C2AE00DDC096 /* GRFSaccadeState.m in Sources */,
+				1139A3F91B5809E300495CF1 /* GRFImageStim.m in Sources */,
 				69E24E4A07A5C2B000DDC096 /* GRFStarttrialState.m in Sources */,
 				69E24E4C07A5C2B200DDC096 /* GRFStopState.m in Sources */,
 				69E24E5107A5C2BD00DDC096 /* main.m in Sources */,

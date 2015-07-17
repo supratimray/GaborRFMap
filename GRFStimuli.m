@@ -37,6 +37,7 @@ NSString *stimulusMonitorID = @"GaborRFMap Stimulus";
     [targetSpot release];
     [gabors release];
     [plaid release];
+    [imageStim release];
     [player release];
 
     [super dealloc];
@@ -105,6 +106,8 @@ NSString *stimulusMonitorID = @"GaborRFMap Stimulus";
     
     [self initPlaid:NO];
     [plaid setAchromatic:YES];
+    
+    imageStim = [[GRFImageStim alloc] init];
     
     // Get the location of the sounds directory and init player object when Knot is initiated [MD 25/04/2015]
     player = [[GRFSoundObjects alloc] init];
@@ -370,9 +373,11 @@ by mapStimTable.
 //	long stimCounter = 0;
     BOOL useSingleITC18;
     BOOL convertToPlaid;
+    BOOL convertToImage;
     // local variables related to auditory stimulus [MD 25/04/2015]
     BOOL playAudStim;
     int kMapGaborAV;
+    
 	
     threadPool = [[NSAutoreleasePool alloc] init];		// create a threadPool for this thread
 	[LLSystemUtil setThreadPriorityPeriodMS:1.0 computationFraction:0.250 constraintFraction:1.0];
@@ -409,6 +414,15 @@ by mapStimTable.
     }
     
     [plaid store];
+
+// Set up the images if necessary.
+// Instead of showing gabors or plaids, we can show a set of images instead.
+    
+    convertToImage = [[task defaults] boolForKey:GRFConvertToImageKey];
+    
+    if (convertToImage) {
+//        [self loadImages];
+    }
     
     // Set up the targetSpot if needed
 /*

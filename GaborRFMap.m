@@ -89,6 +89,7 @@ NSString *GRFIncludeCatchTrialsinDoneListKey = @"GRFIncludeCatchTrialsinDoneList
 NSString *GRFMapTemporalModulationKey = @"GRFMapTemporalModulation";
 
 NSString *GRFConvertToPlaidKey = @"GRFConvertToPlaid";
+NSString *GRFConvertToImageKey = @"GRFConvertToImage";
 NSString *GRFPlayAudStimKey = @"GRFPlayAudStim";
 
 // Visual Stimulus Parameters 

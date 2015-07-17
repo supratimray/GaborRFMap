@@ -1021,7 +1021,7 @@
                                                 <binding destination="1499" name="value" keyPath="arrangedObjects.validReps" id="1757"/>
                                             </connections>
                                         </tableColumn>
-                                        <tableColumn identifier="invalidReps" width="88.04638671875" minWidth="43.04638671875" maxWidth="1000" id="1755">
+                                        <tableColumn identifier="invalidReps" width="103.04638671875" minWidth="43.04638671875" maxWidth="1000" id="1755">
                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="center" title="Invalid">
                                                 <font key="font" metaFont="smallSystem"/>
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -2866,7 +2866,7 @@
                         </textFieldCell>
                     </textField>
                     <button id="2645">
-                        <rect key="frame" x="18" y="260" width="79" height="18"/>
+                        <rect key="frame" x="18" y="254" width="79" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Hide Left" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="2652">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -2888,7 +2888,7 @@
                         </connections>
                     </button>
                     <button id="2647">
-                        <rect key="frame" x="119" y="257" width="164" height="18"/>
+                        <rect key="frame" x="119" y="251" width="164" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Hide Left digital codes" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="2650">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -2920,9 +2920,9 @@
                         </connections>
                     </button>
                     <button id="2653">
-                        <rect key="frame" x="18" y="202" width="164" height="18"/>
+                        <rect key="frame" x="18" y="188" width="164" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="Convert to grating" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="2654">
+                        <buttonCell key="cell" type="check" title="Grating" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="2654">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2962,8 +2962,17 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
+                    <textField verticalHuggingPriority="750" id="qqc-ic-Dqe">
+                        <rect key="frame" x="18" y="208" width="145" height="17"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Convert To:" id="uug-tI-Ra4">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
                     <button id="2899">
-                        <rect key="frame" x="18" y="177" width="127" height="18"/>
+                        <rect key="frame" x="18" y="276" width="127" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="use single ITC18" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="2900">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -2974,9 +2983,9 @@
                         </connections>
                     </button>
                     <button id="2905">
-                        <rect key="frame" x="164" y="202" width="164" height="18"/>
+                        <rect key="frame" x="164" y="188" width="164" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="Convert to plaid" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="2906">
+                        <buttonCell key="cell" type="check" title="Plaid" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="2906">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2985,14 +2994,25 @@
                         </connections>
                     </button>
                     <button id="jTg-dT-ltd">
-                        <rect key="frame" x="164" y="177" width="139" height="18"/>
+                        <rect key="frame" x="164" y="171" width="139" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="Auditory stimulus" bezelStyle="regularSquare" imagePosition="left" inset="2" id="yZb-fs-fY7">
+                        <buttonCell key="cell" type="check" title="Auditory" bezelStyle="regularSquare" imagePosition="left" inset="2" id="yZb-fs-fY7">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
                             <binding destination="498" name="value" keyPath="values.GRFPlayAudStim" id="OWb-9s-8vD"/>
+                        </connections>
+                    </button>
+                    <button id="TkJ-pt-V2Y">
+                        <rect key="frame" x="18" y="171" width="164" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="Image" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="x4J-oT-pa2">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <binding destination="498" name="value" keyPath="values.GRFConvertToImage" id="6In-Li-TgH"/>
                         </connections>
                     </button>
                 </subviews>

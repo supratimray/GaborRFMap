@@ -5,6 +5,7 @@ GRFStimuli.h
 #import "GRF.h"
 #import "GRFMapStimTable.h"
 #import "GRFSoundObjects.h"
+#import "GRFImageStim.h"
 
 @interface GRFStimuli : NSObject {
 
@@ -29,6 +30,7 @@ GRFStimuli.h
     LLFixTarget				*targetSpot;
 //	LLGabor 				*taskGabor;
     LLPlaid                 *plaid;
+    GRFImageStim            *imageStim;
     GRFSoundObjects         *player;
 }
 
