@@ -45,6 +45,7 @@ GRFStimuli.h
 - (LLGabor *)initGabor:(BOOL)bindTemporalFreq;
 - (LLPlaid *)initPlaid:(BOOL)bindTemporalFreq;
 - (void)loadGabor:(LLGabor *)gabor withStimDesc:(StimDesc *)pSD;
+- (void)loadImage:(StimDesc *)pSD;
 - (void)loadPlaid:(LLPlaid *)plaid withStimDesc0:(StimDesc *)pSD0 withStimDesc1:(StimDesc *)pSD1;
 - (void)makeStimLists:(TrialDesc *)pTrial;
 - (void)clearStimLists:(TrialDesc *)pTrial;

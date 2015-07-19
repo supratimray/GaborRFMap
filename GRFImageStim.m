@@ -123,7 +123,7 @@ NSString *ImageSizeDegKey = @"sizeDeg";
 	return elevationDeg;
 }
 
-- (void)erease {
+- (void)erase {
 
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, backgroundTexture);
@@ -277,11 +277,11 @@ NSString *ImageSizeDegKey = @"sizeDeg";
 	
 	NSImage	*currentImage = [[NSImage alloc] initWithContentsOfFile:filePath];
 	
-	NSSize imageSize = [currentImage size];
+//	NSSize imageSize = [currentImage size];
 	[currentImage lockFocus];
  
-	bmpRep = [[NSBitmapImageRep alloc] initWithFocusedViewRect:
-                        NSMakeRect(0,0,imageSize.width,imageSize.height)];
+    bmpRep = [[NSBitmapImageRep alloc] initWithData:[currentImage TIFFRepresentation]]; // initWithFocusedViewRect:NSMakeRect(0,0,imageSize.width,imageSize.height)];
+//    bmpRep = [[NSBitmapImageRep alloc] initWithFocusedViewRect:NSMakeRect(0,0,imageSize.width,imageSize.height)];
  
 	imgWidth = [bmpRep size].width;
 	imgHeight = [bmpRep size].height;

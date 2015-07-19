@@ -51,6 +51,8 @@
         thisEventName = @"FI";
     else if ([eventName isEqualTo:@"fixOn"] || [eventName isEqualTo:@"FO"] )
         thisEventName = @"FO";
+    else if ([eventName isEqualTo:@"imageStimulus"] || [eventName isEqualTo:@"IS"] )
+        thisEventName = @"IS";
     else if ([eventName isEqualTo:@"instructTrial"] || [eventName isEqualTo:@"IT"] )
         thisEventName = @"IT";
     else if ([eventName isEqualTo:@"mapping0"] || [eventName isEqualTo:@"M0"] )

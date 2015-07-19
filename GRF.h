@@ -21,7 +21,7 @@ enum {kLinear = 0, kLogarithmic};
 enum {kUniform = 0, kExponential};
 enum {kAuto = 0, kManual};
 enum {kRewardFixed = 0, kRewardVariable};
-enum {kNullStim = 0, kValidStim, kTargetStim, kFrontPadding, kBackPadding, kPlaidStim, kAudStim, kVisAudStim}; // kAudStim and kVisAudStim added by MD to indicate auditory/ combined auditory-visual gabors respectively
+enum {kNullStim = 0, kValidStim, kTargetStim, kFrontPadding, kBackPadding, kPlaidStim, kAudStim, kVisAudStim, kImageStim};
 enum {kMyEOTCorrect = 0, kMyEOTMissed, kMyEOTEarlyToValid, kMyEOTEarlyToInvalid, kMyEOTBroke, 
 				kMyEOTIgnored, kMyEOTQuit, kMyEOTTypes};
 enum {  kTrialStartDigitOutCode = 0x0010,

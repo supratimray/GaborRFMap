@@ -70,7 +70,7 @@ extern NSString *ImageDirectionDegKey;
 - (void)drawImage;
 //- (double)stimulationSizeDeg;
 - (float)sizeDeg;
-- (void)erease;
+- (void)erase;
 - (void)genQuad;
 - (void)getTextureInfo;
 - (void)initGL;
