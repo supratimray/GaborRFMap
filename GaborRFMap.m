@@ -28,6 +28,7 @@ NSString *GRFCatchTrialPCKey = @"GRFCatchTrialPC";
 NSString *GRFCatchTrialMaxPCKey = @"GRFCatchTrialMaxPC";
 NSString *GRFCueMSKey = @"GRFCueMS";
 NSString *GRFDoSoundsKey = @"GRFDoSounds";
+NSString *GRFEyeFilterWeightKey = @"GRFEyeFilterWeight";
 NSString *GRFFixateKey = @"GRFFixate";
 NSString *GRFFixateMSKey = @"GRFFixateMS";
 NSString *GRFFixateOnlyKey = @"GRFFixateOnly";
@@ -70,6 +71,7 @@ NSString *GRFChangeRemainKey = @"GRFChangeRemain";
 NSString *GRFChangeArrayKey = @"GRFChangeArray";
 NSString *GRFStimTablesKey = @"GRFStimTables";
 NSString *GRFStimTableCountsKey = @"GRFStimTableCounts";
+NSString *GRFStimTableRangeTypesKey = @"GRFStimTableRangeTypes";
 NSString *GRFMapStimContrastPCKey = @"GRFMapStimContrastPC";
 NSString *GRFMapStimRadiusSigmaRatioKey = @"GRFMapStimRadiusSigmaRatio";
 NSString *GRFTargetAlphaKey = @"GRFTargetAlpha";
@@ -87,8 +89,8 @@ NSString *GRFIncludeCatchTrialsinDoneListKey = @"GRFIncludeCatchTrialsinDoneList
 NSString *GRFMapTemporalModulationKey = @"GRFMapTemporalModulation";
 
 NSString *GRFConvertToPlaidKey = @"GRFConvertToPlaid";
-
-NSString *GRFLinearTFRangeKey = @"GRFLinearTFRange";
+NSString *GRFConvertToImageKey = @"GRFConvertToImage";
+NSString *GRFPlayAudStimKey = @"GRFPlayAudStim";
 
 // Visual Stimulus Parameters 
 
@@ -102,13 +104,14 @@ NSString *GRFValidRepsKey = @"validReps";
 NSString *GRFInvalidRepsKey = @"invalidReps";
 
 NSString *keyPaths[] = {@"values.GRFBlockLimit", @"values.GRFRespTimeMS", 
-					@"values.GRFStimTableCounts", @"values.GRFStimTables",
+					@"values.GRFStimTableCounts", @"values.GRFStimTables", @"values.GRFStimTableRangeTypes",
 					@"values.GRFStimDurationMS", @"values.GRFMapStimDurationMS", @"values.GRFMapInterstimDurationMS", 
 					@"values.GRFInterstimMS", @"values.GRFOrientationChanges", @"values.GRFMappingBlocks",
 					@"values.GRFMinDirChangeDeg", @"values.GRFMaxDirChangeDeg", @"values.GRFStimRepsPerBlock",
 					@"values.GRFMinTargetMS", @"values.GRFMaxTargetMS", @"values.GRFChangeArray",
 					@"values.GRFChangeScale", @"values.GRFMeanTargetMS", @"values.GRFFixateMS",
 					@"values.GRFMapStimRadiusSigmaRatio",@"values.GRFHideTaskGabor",@"values.GRFHideLeft",@"values.GRFHideRight",
+                    @"values.GRFEyeFilterWeight",
 					nil};
 
 LLScheduleController	*scheduler = nil;
@@ -343,8 +346,8 @@ long                trialCounter;
 	behaviorController = [[GRFBehaviorController alloc] init];
     [dataDoc addObserver:behaviorController];
 
-	spikeController = [[GRFSpikeController alloc] init];
-    [dataDoc addObserver:spikeController];
+//	spikeController = [[GRFSpikeController alloc] init];
+//    [dataDoc addObserver:spikeController];
 
     eyeXYController = [[GRFEyeXYController alloc] init];
     [dataDoc addObserver:eyeXYController];
@@ -378,7 +381,10 @@ long                trialCounter;
 	[dataController assignTimestampData:VBLDataAssignment];
 	[dataController assignDigitalInputDevice:@"Synthetic"];
 	[dataController assignDigitalOutputDevice:@"Synthetic"];
-    
+    xFilter = [[LLFilterExp alloc] init];
+    [xFilter setStepWeight:(1.0 - [defaults floatForKey:GRFEyeFilterWeightKey])];
+    yFilter = [[LLFilterExp alloc] init];
+    [yFilter setStepWeight:(1.0 - [defaults floatForKey:GRFEyeFilterWeightKey])];
     
 	collectorTimer = [NSTimer scheduledTimerWithTimeInterval:0.004 target:self
 			selector:@selector(dataCollect:) userInfo:nil repeats:YES];
@@ -425,11 +431,13 @@ long                trialCounter;
 //	}
     
     if ((data = [dataController dataOfType:@"eyeLXData"]) != nil) {
+        data = [xFilter filteredValues:data];
 		[dataDoc putEvent:@"eyeLXData" withData:(Ptr)[data bytes] lengthBytes:[data length]];
 		currentEyesUnits[kLeftEye].x = *(short *)([data bytes] + [data length] - sizeof(short));
 	}
     
 	if ((data = [dataController dataOfType:@"eyeLYData"]) != nil) {
+        data = [yFilter filteredValues:data];
         [dataDoc putEvent:@"eyeLYData" withData:(Ptr)[data bytes] lengthBytes:[data length]];
 		currentEyesUnits[kLeftEye].y = *(short *)([data bytes] + [data length] - sizeof(short));
         currentEyesDeg[kLeftEye] = [eyeCalibrator degPointFromUnitPoint: currentEyesUnits[kLeftEye] forEye:kLeftEye];
@@ -438,10 +446,12 @@ long                trialCounter;
 		[dataDoc putEvent:@"eyeLPData" withData:(Ptr)[data bytes] lengthBytes:[data length]];
 	}
 	if ((data = [dataController dataOfType:@"eyeRXData"]) != nil) {
+        data = [xFilter filteredValues:data];
 		[dataDoc putEvent:@"eyeRXData" withData:(Ptr)[data bytes] lengthBytes:[data length]];
 		currentEyesUnits[kRightEye].x = *(short *)([data bytes] + [data length] - sizeof(short));
 	}
 	if ((data = [dataController dataOfType:@"eyeRYData"]) != nil) {
+        data = [yFilter filteredValues:data];
 		[dataDoc putEvent:@"eyeRYData" withData:(Ptr)[data bytes] lengthBytes:[data length]];
 		currentEyesUnits[kRightEye].y = *(short *)([data bytes] + [data length] - sizeof(short));
 		currentEyesDeg[kRightEye] = [eyeCalibrator degPointFromUnitPoint: currentEyesUnits[kRightEye] forEye:kRightEye];	}
@@ -484,9 +494,11 @@ long                trialCounter;
     [dataController setDataEnabled:[NSNumber numberWithBool:NO]];
     [stateSystem stop];
 	[collectorTimer invalidate];
+    [xFilter release];
+    [yFilter release];
     [dataDoc removeObserver:stateSystem];
     [dataDoc removeObserver:behaviorController];
-    [dataDoc removeObserver:spikeController];
+//    [dataDoc removeObserver:spikeController];
     [dataDoc removeObserver:eyeXYController];
     [dataDoc removeObserver:summaryController];
     [dataDoc removeObserver:xtController];
@@ -501,8 +513,8 @@ long                trialCounter;
 
     [behaviorController close];
     [behaviorController release];
-    [spikeController close];
-    [spikeController release];
+//    [spikeController close];
+//    [spikeController release];
     [eyeXYController deactivate];			// requires a special call
     [eyeXYController release];
     [summaryController close];
@@ -861,6 +873,10 @@ long                trialCounter;
     }
     else if ([key isEqualTo:GRFHideRightKey]) {
         [[task defaults] setBool:YES forKey:GRFHideRightDigitalKey];
+    }
+    else if ([key isEqualTo:GRFEyeFilterWeightKey]) {
+        [xFilter setStepWeight:(1.0 - [defaults floatForKey:GRFEyeFilterWeightKey])];
+        [yFilter setStepWeight:(1.0 - [defaults floatForKey:GRFEyeFilterWeightKey])];
     }
 }
 

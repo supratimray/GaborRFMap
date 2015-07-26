@@ -25,6 +25,8 @@
 	LLTaskStatus			*taskStatus;
     NSArray                 *topLevelObjects;
     NSWindowController 		*xtController;
+    LLFilterExp				*xFilter;
+    LLFilterExp				*yFilter;
 	
 	GRFMapStimTable			*mapStimTable0; 
 	GRFMapStimTable			*mapStimTable1; 

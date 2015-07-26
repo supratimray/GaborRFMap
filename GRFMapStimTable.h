@@ -12,7 +12,14 @@
 {
 	long blocksDone;
 	long blockLimit;
-	BOOL doneList[kMaxMapValues][kMaxMapValues][kMaxMapValues][kMaxMapValues][kMaxMapValues][kMaxMapValues][kMaxMapValues];
+	CFMutableBitVectorRef doneList; // maintained as a 1-D bit vector
+    long azimuthCount;
+    long elevationCount;
+    long sigmaCount;
+    long spatialFreqCount;
+    long directionDegCount;
+    long contrastCount;
+    long temporalFreqCount;
     long mapIndex;                  // index to instance of GRFMapStimTable
 	int stimRemainingInBlock;
 	int stimInBlock;

@@ -116,6 +116,29 @@
 			<integer>5</integer>
 		</dict>
 	</array>
+	<key>GRFStimTableRangeTypes</key>
+	<array>
+		<dict>
+			<key>row</key>
+			<string>log</string>
+			<key>sigmaLog0</key>
+			<false/>
+			<key>spatialFreqLog0</key>
+			<true/>
+			<key>contrastLog0</key>
+			<true/>
+			<key>temporalFreqLog0</key>
+			<true/>
+			<key>sigmaLog1</key>
+			<false/>
+			<key>spatialFreqLog1</key>
+			<true/>
+			<key>contrastLog1</key>
+			<true/>
+			<key>temporalFreqLog1</key>
+			<true/>
+		</dict>
+	</array>
 	<key>GRFChangeArray</key>
 	<array>
 		<dict>
@@ -229,6 +252,8 @@
 	<false/>
 	<key>GRFConvertToPlaid</key>
 	<false/>
+	<key>GRFConvertToImage</key>
+	<false/>
 	<key>GRFUseSingleITC18</key>
 	<true/>
 	<key>GRFCueMS</key>
@@ -263,6 +288,8 @@
 	<integer>3500</integer>
 	<key>GRFEyeXYWindowVisible</key>
 	<true/>
+	<key>GRFEyeFilterWeight</key>
+	<real>0.1</real>
 	<key>GRFEyeXYFadeDots</key>
 	<true/>
 	<key>GRFFixGraceMS</key>
@@ -303,8 +330,6 @@
 	<real>180</real>
 	<key>GRFKdlThetaDeg</key>
 	<real>90</real>
-	<key>GRFLinearTFRange</key>
-	<false/>
 	<key>GRFMapTemporalModulation</key>
 	<integer>1</integer>
 	<key>GRFMaxContrast</key>
@@ -317,6 +342,8 @@
 	<integer>2500</integer>
 	<key>GRFNumInstructTrials</key>
 	<integer>2</integer>
+	<key>GRFPlayAudStim</key>
+	<false/>
 	<key>GRFPrecueMS</key>
 	<integer>250</integer>
 	<key>GRFRandTaskGaborDirection</key>

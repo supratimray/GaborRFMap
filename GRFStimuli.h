@@ -4,6 +4,8 @@ GRFStimuli.h
 
 #import "GRF.h"
 #import "GRFMapStimTable.h"
+#import "GRFSoundObjects.h"
+#import "GRFImageStim.h"
 
 @interface GRFStimuli : NSObject {
 
@@ -28,6 +30,8 @@ GRFStimuli.h
     LLFixTarget				*targetSpot;
 //	LLGabor 				*taskGabor;
     LLPlaid                 *plaid;
+    GRFImageStim            *imageStim;
+    GRFSoundObjects         *player;
 }
 
 - (void)doFixSettings;
@@ -41,6 +45,7 @@ GRFStimuli.h
 - (LLGabor *)initGabor:(BOOL)bindTemporalFreq;
 - (LLPlaid *)initPlaid:(BOOL)bindTemporalFreq;
 - (void)loadGabor:(LLGabor *)gabor withStimDesc:(StimDesc *)pSD;
+- (void)loadImage:(StimDesc *)pSD;
 - (void)loadPlaid:(LLPlaid *)plaid withStimDesc0:(StimDesc *)pSD0 withStimDesc1:(StimDesc *)pSD1;
 - (void)makeStimLists:(TrialDesc *)pTrial;
 - (void)clearStimLists:(TrialDesc *)pTrial;

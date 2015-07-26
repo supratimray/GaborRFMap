@@ -21,7 +21,7 @@ enum {kLinear = 0, kLogarithmic};
 enum {kUniform = 0, kExponential};
 enum {kAuto = 0, kManual};
 enum {kRewardFixed = 0, kRewardVariable};
-enum {kNullStim = 0, kValidStim, kTargetStim, kFrontPadding, kBackPadding};
+enum {kNullStim = 0, kValidStim, kTargetStim, kFrontPadding, kBackPadding, kPlaidStim, kAudStim, kVisAudStim, kImageStim};
 enum {kMyEOTCorrect = 0, kMyEOTMissed, kMyEOTEarlyToValid, kMyEOTEarlyToInvalid, kMyEOTBroke, 
 				kMyEOTIgnored, kMyEOTQuit, kMyEOTTypes};
 enum {  kTrialStartDigitOutCode = 0x0010,
@@ -34,7 +34,7 @@ enum {  kTrialStartDigitOutCode = 0x0010,
 
 #define	kSleepInMicrosec	5000
 #define	kMaxOriChanges      12
-#define kMaxMapValues       6
+#define kMaxMapValues       12
 
 typedef struct {
 	long	levels;				// number of active stimulus levels
@@ -172,6 +172,7 @@ extern NSString *GRFCatchTrialMaxPCKey;
 extern NSString *GRFCueMSKey;
 //extern NSString *GRFChageScaleKey;
 extern NSString *GRFDoSoundsKey;
+extern NSString *GRFEyeFilterWeightKey;
 extern NSString *GRFFixateKey;
 extern NSString *GRFFixateMSKey;
 extern NSString *GRFFixateOnlyKey;
@@ -244,8 +245,8 @@ extern NSString *GRFIncludeCatchTrialsinDoneListKey;
 extern NSString *GRFMapTemporalModulationKey;
 
 extern NSString *GRFConvertToPlaidKey;
-
-extern NSString *GRFLinearTFRangeKey;
+extern NSString *GRFConvertToImageKey;
+extern NSString *GRFPlayAudStimKey;
 
 long		argRand;
 

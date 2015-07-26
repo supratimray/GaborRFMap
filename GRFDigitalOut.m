@@ -33,6 +33,8 @@
     
     if ([eventName isEqualTo:@"attendLoc"] || [eventName isEqualTo:@"AL"] )
         thisEventName = @"AL";
+    else if ([eventName isEqualTo:@"auditoryStimulus"] || [eventName isEqualTo:@"AS"] )
+        thisEventName = @"AS";
     else if ([eventName isEqualTo:@"azimuth"] || [eventName isEqualTo:@"AZ"] )
         thisEventName = @"AZ";
     else if ([eventName isEqualTo:@"break"] || [eventName isEqualTo:@"BR"] )
@@ -49,6 +51,8 @@
         thisEventName = @"FI";
     else if ([eventName isEqualTo:@"fixOn"] || [eventName isEqualTo:@"FO"] )
         thisEventName = @"FO";
+    else if ([eventName isEqualTo:@"imageStimulus"] || [eventName isEqualTo:@"IS"] )
+        thisEventName = @"IS";
     else if ([eventName isEqualTo:@"instructTrial"] || [eventName isEqualTo:@"IT"] )
         thisEventName = @"IT";
     else if ([eventName isEqualTo:@"mapping0"] || [eventName isEqualTo:@"M0"] )
