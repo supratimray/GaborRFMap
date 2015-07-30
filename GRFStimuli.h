@@ -19,6 +19,8 @@ GRFStimuli.h
 	NSArray					*gabors;
 	NSMutableArray			*mapStimList0;
 	NSMutableArray			*mapStimList1;
+    NSMutableArray          *mapStimImage;
+    NSBitmapImageRep	    *bmpRep0;
 
 	LLIntervalMonitor 		*monitor;
 	short					selectTable[kMaxOriChanges];
@@ -46,6 +48,7 @@ GRFStimuli.h
 - (LLPlaid *)initPlaid:(BOOL)bindTemporalFreq;
 - (void)loadGabor:(LLGabor *)gabor withStimDesc:(StimDesc *)pSD;
 - (void)loadImage:(StimDesc *)pSD;
+- (void)loadImageFromBitmap:(StimDesc *)pSD bitmapFile:(NSBitmapImageRep *)bmp;
 - (void)loadPlaid:(LLPlaid *)plaid withStimDesc0:(StimDesc *)pSD0 withStimDesc1:(StimDesc *)pSD1;
 - (void)makeStimLists:(TrialDesc *)pTrial;
 - (void)clearStimLists:(TrialDesc *)pTrial;

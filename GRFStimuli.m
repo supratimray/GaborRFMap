@@ -39,6 +39,8 @@ NSString *stimulusMonitorID = @"GaborRFMap Stimulus";
     [plaid release];
     [imageStim release];
     [player release];
+    [mapStimImage release];
+    [bmpRep0 release];
 
     [super dealloc];
 }
@@ -92,6 +94,7 @@ NSString *stimulusMonitorID = @"GaborRFMap Stimulus";
 	taskStimList = [[NSMutableArray alloc] init];
 	mapStimList0 = [[NSMutableArray alloc] init];
 	mapStimList1 = [[NSMutableArray alloc] init];
+    mapStimImage = [[NSMutableArray alloc] init];
 	
 // Create and initialize the visual stimuli
 
@@ -179,6 +182,8 @@ by mapStimTable.
 	float frameRateHz;
 	StimDesc stimDesc;
 	LLGabor *taskGabor = [self taskGabor];
+    BOOL convertToImage;
+    NSString *imageFile;
 	
     trial = *pTrial;
 	[taskStimList removeAllObjects];
@@ -271,6 +276,22 @@ by mapStimTable.
 
     [[(GaborRFMap*)task mapStimTable0] makeMapStimList:mapStimList0 index:0 lastFrame:lastStimOffFrame pTrial:pTrial];
 	[[(GaborRFMap*)task mapStimTable1] makeMapStimList:mapStimList1 index:1 lastFrame:lastStimOffFrame pTrial:pTrial];
+    
+// [Vinay] - Prepare the image stimuli
+    convertToImage = [[task defaults] boolForKey:GRFConvertToImageKey];
+    
+    if (convertToImage) {
+        for (stim=0; stim < pTrial->numStim; stim++) {
+            [[mapStimList0 objectAtIndex:stim] getValue:&stimDesc];
+            
+            imageFile = [[[self getResourcesFolder] stringByAppendingPathComponent:@"Images"] stringByAppendingPathComponent:[NSString stringWithFormat:@"Image%d%s",(int)(stimDesc.temporalFreqHz),".jpg"]];
+            NSLog(@"imageFile is : %@",imageFile);
+            
+            bmpRep0 = [imageStim getImageStimBitmap:imageFile];
+            [mapStimImage insertObject:bmpRep0 atIndex:stim];
+        }
+        
+    }
 
 }
 	
@@ -306,6 +327,14 @@ by mapStimTable.
     NSLog(@"imageFile is : %@",imageFile);
     [imageStim setImageStimData:imageDesc];
     [imageStim setImageStim:imageFile];
+}
+
+- (void)loadImageFromBitmap:(StimDesc *)pSD bitmapFile:(NSBitmapImageRep *)bmp;
+{
+    ImageParams imageDesc;
+    imageDesc = [self generateImageDescWithGabor:pSD];
+    [imageStim setImageStimData:imageDesc];
+    [imageStim setImageStimFromBitmap:bmp];
 }
 
 - (void)loadPlaid:(LLPlaid *)pld withStimDesc0:(StimDesc *)pSD0 withStimDesc1:(StimDesc *)pSD1;
@@ -354,6 +383,7 @@ by mapStimTable.
 	// tally stim lists first?
 	[mapStimList0 removeAllObjects];
 	[mapStimList1 removeAllObjects];
+    [mapStimImage removeAllObjects];
 }
 
 - (LLGabor *)mappingGabor0;
@@ -434,7 +464,8 @@ by mapStimTable.
     convertToImage = [[task defaults] boolForKey:GRFConvertToImageKey];
     
     if (convertToImage) {
-        [self loadImage:&stimDescs[kMapGabor0]];
+        //[self loadImage:&stimDescs[kMapGabor0]];
+        [self loadImageFromBitmap:&stimDescs[kMapGabor0] bitmapFile:[mapStimImage objectAtIndex:0]];
         stimDescs[kMapGabor0].stimType=kImageStim;
     }
     
@@ -619,7 +650,8 @@ by mapStimTable.
                     }
                     
                     if (convertToImage && index == kMapGabor0) {
-                        [self loadImage:&stimDescs[kMapGabor0]];
+                        //[self loadImage:&stimDescs[kMapGabor0]];
+                        [self loadImageFromBitmap:&stimDescs[kMapGabor0] bitmapFile:[mapStimImage objectAtIndex:(stimIndices[index]+1)]];
                         stimDescs[kMapGabor0].stimType=kImageStim;
                     }
                     
@@ -668,6 +700,7 @@ by mapStimTable.
 	stimulusOn = abortStimuli = NO;
 	[stimLists release];
     [threadPool release];
+    [mapStimImage removeAllObjects]; // [Vinay] - The objects need to be removed here, otherwise they keep adding up across trials
 }
 
 - (void)setFixSpot:(BOOL)state;

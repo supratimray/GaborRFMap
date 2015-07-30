@@ -298,6 +298,49 @@ NSString *ImageSizeDegKey = @"sizeDeg";
 	[self initGL];	
 }
 
+
+- (NSBitmapImageRep *)getImageStimBitmap:(NSString*)filePath;
+{
+    
+    // First, deallocate any image reps we might have.
+	if(bmpRep)
+	{
+		[bmpRep release];
+	}
+	if(!filePath)
+		return 0;
+    // Get raw bitmap data from the NSImage
+	NSImage	*currentImage = [[NSImage alloc] initWithContentsOfFile:filePath];
+    [currentImage lockFocus];
+    bmpRep = [[NSBitmapImageRep alloc] initWithData:[currentImage TIFFRepresentation]];
+    [currentImage unlockFocus];
+    return bmpRep;
+}
+
+- (void)setImageStimFromBitmap:(NSBitmapImageRep *)bmp;
+{
+    
+    // First, deallocate any image reps we might have.
+	if(bmp)
+	{
+		glDeleteTextures(1, &imageTexture);
+	}
+	
+    bmpRep = bmp;
+    
+    imgWidth = [bmpRep size].width;
+	imgHeight = [bmpRep size].height;
+    
+    // Set our scaling factors
+	scaleX = imgWidth / scaleFactor;
+	scaleY = imgHeight / scaleFactor;
+	//NSLog(@"Image: %d x %d", imgWidth, imgHeight);
+	[self getTextureInfo];
+    // Run through our initialization routine
+	[self initGL];
+}
+
+
 - (void)makeBackgroundImage;
 {
 	int i, j;
