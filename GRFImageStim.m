@@ -303,10 +303,11 @@ NSString *ImageSizeDegKey = @"sizeDeg";
 {
     
     // First, deallocate any image reps we might have.
-	if(bmpRep)
+    /*
+	if(bmpRep && bmpRep != nil && [bmpRep TIFFRepresentation] != 0)
 	{
 		[bmpRep release];
-	}
+	}*/
 	if(!filePath)
 		return 0;
     // Get raw bitmap data from the NSImage

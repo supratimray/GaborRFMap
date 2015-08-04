@@ -40,7 +40,10 @@ NSString *stimulusMonitorID = @"GaborRFMap Stimulus";
     [imageStim release];
     [player release];
     [mapStimImage release];
-    [bmpRep0 release];
+    //[bmpRep0 release]; //[Vinay] - it seems that this (bmpRep0) can't be owned even if it is allocated and initialized explicitly using -
+    // bmpRep0 = [[NSBitmapImageRep alloc] initWithData:nil]; in -init
+    // Therefore, we cannot release it ourselves
+    // Probably it gets properly allocated and initialized only with a valid bitmap data as done in GRFImageStim.m for bmpRep
 
     [super dealloc];
 }
@@ -284,7 +287,8 @@ by mapStimTable.
         for (stim=0; stim < pTrial->numStim; stim++) {
             [[mapStimList0 objectAtIndex:stim] getValue:&stimDesc];
             
-            imageFile = [[[self getResourcesFolder] stringByAppendingPathComponent:@"Images"] stringByAppendingPathComponent:[NSString stringWithFormat:@"Image%d%s",(int)(stimDesc.temporalFreqHz),".jpg"]];
+            //imageFile = [[[self getResourcesFolder] stringByAppendingPathComponent:@"Images"] stringByAppendingPathComponent:[NSString stringWithFormat:@"Image%d%s",(int)(stimDesc.spatialFreqCPD),".jpg"]];
+            imageFile = [[[self getResourcesFolder] stringByAppendingPathComponent:@"Images"] stringByAppendingPathComponent:[NSString stringWithFormat:@"Image%d%s",(int)(stimDesc.spatialFreqCPD),".tif"]];
             NSLog(@"imageFile is : %@",imageFile);
             
             bmpRep0 = [imageStim getImageStimBitmap:imageFile];
@@ -323,7 +327,8 @@ by mapStimTable.
     ImageParams imageDesc;
     
     imageDesc = [self generateImageDescWithGabor:pSD];
-    imageFile = [[[self getResourcesFolder] stringByAppendingPathComponent:@"Images"] stringByAppendingPathComponent:[NSString stringWithFormat:@"Image%d%s",(int)(pSD->temporalFreqHz),".jpg"]];
+    //imageFile = [[[self getResourcesFolder] stringByAppendingPathComponent:@"Images"] stringByAppendingPathComponent:[NSString stringWithFormat:@"Image%d%s",(int)(pSD->spatialFreqCPD),".jpg"]];
+    imageFile = [[[self getResourcesFolder] stringByAppendingPathComponent:@"Images"] stringByAppendingPathComponent:[NSString stringWithFormat:@"Image%d%s",(int)(pSD->spatialFreqCPD),".tif"]];
     NSLog(@"imageFile is : %@",imageFile);
     [imageStim setImageStimData:imageDesc];
     [imageStim setImageStim:imageFile];
@@ -420,6 +425,7 @@ by mapStimTable.
     // local variables related to auditory stimulus [MD 25/04/2015]
     BOOL playAudStim;
     int kMapGaborAV;
+    //NSColor *fixSpotColor;
     
 	
     threadPool = [[NSAutoreleasePool alloc] init];		// create a threadPool for this thread
@@ -536,9 +542,12 @@ by mapStimTable.
                 // Increment gaborFrames here
                 gaborFrames[index]++;
 			}
+
 		}
-        
-		[fixSpot draw];
+
+		//fixSpotColor = [fixSpot fixTargetColor];
+        //[fixSpot setFixTargetColor:fixSpotColor];
+        [fixSpot draw];
 		[[NSOpenGLContext currentContext] flushBuffer];
 		glFinish();
 		if (trialFrame == 0) {
@@ -651,7 +660,7 @@ by mapStimTable.
                     
                     if (convertToImage && index == kMapGabor0) {
                         //[self loadImage:&stimDescs[kMapGabor0]];
-                        [self loadImageFromBitmap:&stimDescs[kMapGabor0] bitmapFile:[mapStimImage objectAtIndex:(stimIndices[index]+1)]];
+                        //[self loadImageFromBitmap:&stimDescs[kMapGabor0] bitmapFile:[mapStimImage objectAtIndex:(stimIndices[index]+1)]]; // [Vinay] - do not load it as yet. Load it on the frame before the next stimulus is drawn. This way the fixation spot retains its colour.
                         stimDescs[kMapGabor0].stimType=kImageStim;
                     }
                     
@@ -670,6 +679,11 @@ by mapStimTable.
                 [gabors makeObjectsPerformSelector:@selector(store)];
                 [plaid store];
 			}
+            
+            // [Vinay] - Load the next image on the frame previous to its stimOnFrame
+            if (((stimIndices[index]) < [[stimLists objectAtIndex:index] count]) && (index == kMapGabor0) && (trialFrame == stimDescs[kMapGabor0].stimOnFrame - 1) && convertToImage) {
+                            [self loadImageFromBitmap:&stimDescs[kMapGabor0] bitmapFile:[mapStimImage objectAtIndex:(stimIndices[index])]]; // [Vinay] - stimIndices[index] is already incremented on the stimOffFrame of the previous stimulus
+            }
 		}
     }
 	
