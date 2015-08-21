@@ -472,7 +472,6 @@ by mapStimTable.
     if (convertToImage) {
         //[self loadImage:&stimDescs[kMapGabor0]];
         [self loadImageFromBitmap:&stimDescs[kMapGabor0] bitmapFile:[mapStimImage objectAtIndex:0]];
-        //[imageStim fillImageInTexture];
         stimDescs[kMapGabor0].stimType=kImageStim;
     }
     
@@ -684,7 +683,6 @@ by mapStimTable.
             // [Vinay] - Load the next image on the frame previous to its stimOnFrame
             if (((stimIndices[index]) < [[stimLists objectAtIndex:index] count]) && (index == kMapGabor0) && (trialFrame == stimDescs[kMapGabor0].stimOnFrame - 1) && convertToImage) {
                             [self loadImageFromBitmap:&stimDescs[kMapGabor0] bitmapFile:[mapStimImage objectAtIndex:(stimIndices[index])]]; // [Vinay] - stimIndices[index] is already incremented on the stimOffFrame of the previous stimulus
-                //[imageStim fillImageInTexture];
             }
 		}
     }

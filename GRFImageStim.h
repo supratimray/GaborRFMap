@@ -79,7 +79,6 @@ extern NSString *ImageDirectionDegKey;
 - (void)loadTextureFromFile:(NSString*)filePath;
 - (NSBitmapImageRep *)getImageStimBitmap:(NSString*)filePath;
 - (void)setImageStimFromBitmap:(NSBitmapImageRep *)bmp;
-- (void)fillImageInTexture;
 - (void)makeBackgroundImage;
 - (void)makeBackgroundTexture;
 - (void)restore;

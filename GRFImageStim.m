@@ -357,19 +357,6 @@ NSString *ImageSizeDegKey = @"sizeDeg";
 	[self initGL];
 }
 
--(void)fillImageInTexture;
-{
-    /*
-    if(bmpRep)
-	{
-		glDeleteTextures(1, &imageTexture);
-	}*/
-    //[self getTextureInfo];
-    //[self initGL];
-    glTexImage2D(GL_TEXTURE_RECTANGLE_EXT, 0, bpp, imgWidth, imgHeight, 0, GL_RGB, datatype, [bmpRep bitmapData]);
-}
-
-
 - (void)makeBackgroundImage;
 {
 	int i, j;
