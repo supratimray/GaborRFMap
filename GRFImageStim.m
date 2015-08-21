@@ -96,6 +96,10 @@ NSString *ImageSizeDegKey = @"sizeDeg";
 
 	if(![bmpRep bitmapData])
 		return;
+    
+    // [Vinay] - compute the aspect ratio and draw the stimulus as per the original aspect ratio
+    // float *aspectRatio;
+    aspectRatio = (float)imgWidth/(float)imgHeight;
 
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
@@ -106,6 +110,7 @@ NSString *ImageSizeDegKey = @"sizeDeg";
 
 // Draw it!
 	glBegin(GL_QUADS);
+        /*
 		glTexCoord2f(0.0, 0.0); 
 		glVertex2f(azimuthDeg + sizeDeg/2, elevationDeg + sizeDeg/2);
 		glTexCoord2f(imgWidth, 0.0); 
@@ -114,6 +119,17 @@ NSString *ImageSizeDegKey = @"sizeDeg";
 		glVertex2f(azimuthDeg - sizeDeg/2, elevationDeg - sizeDeg/2);
 		glTexCoord2f(0.0, imgHeight); 
 		glVertex2f(azimuthDeg + sizeDeg/2, elevationDeg - sizeDeg/2);
+        */
+    
+        glTexCoord2f(0.0, 0.0);
+        glVertex2f(azimuthDeg - (aspectRatio * sizeDeg)/2, elevationDeg + sizeDeg/2);
+        glTexCoord2f(imgWidth, 0.0);
+        glVertex2f(azimuthDeg + (aspectRatio * sizeDeg)/2, elevationDeg + sizeDeg/2);
+        glTexCoord2f(imgWidth, imgHeight);
+        glVertex2f(azimuthDeg + (aspectRatio * sizeDeg)/2, elevationDeg - sizeDeg/2);
+        glTexCoord2f(0.0, imgHeight);
+        glVertex2f(azimuthDeg - (aspectRatio * sizeDeg)/2, elevationDeg - sizeDeg/2);
+    
 	glEnd();
 	glDisable(GL_TEXTURE_RECTANGLE_EXT);
 }
@@ -304,7 +320,7 @@ NSString *ImageSizeDegKey = @"sizeDeg";
     
     // First, deallocate any image reps we might have.
     /*
-	if(bmpRep && bmpRep != nil && [bmpRep TIFFRepresentation] != 0)
+	if(bmpRep && !(bmpRep == nil || [bmpRep bitmapData] == nil))
 	{
 		[bmpRep release];
 	}*/
@@ -339,6 +355,18 @@ NSString *ImageSizeDegKey = @"sizeDeg";
 	[self getTextureInfo];
     // Run through our initialization routine
 	[self initGL];
+}
+
+-(void)fillImageInTexture;
+{
+    /*
+    if(bmpRep)
+	{
+		glDeleteTextures(1, &imageTexture);
+	}*/
+    //[self getTextureInfo];
+    //[self initGL];
+    glTexImage2D(GL_TEXTURE_RECTANGLE_EXT, 0, bpp, imgWidth, imgHeight, 0, GL_RGB, datatype, [bmpRep bitmapData]);
 }
 
 

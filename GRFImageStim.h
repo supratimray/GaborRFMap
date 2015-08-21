@@ -59,7 +59,8 @@ extern NSString *ImageDirectionDegKey;
 	BOOL				ready;
 	//float				azimuthDeg;
 	//float				elevationDeg;
-	float				sizeDeg;	
+	float				sizeDeg;
+	float               aspectRatio;
 	//float				directionDeg;	
 }
 
@@ -78,6 +79,7 @@ extern NSString *ImageDirectionDegKey;
 - (void)loadTextureFromFile:(NSString*)filePath;
 - (NSBitmapImageRep *)getImageStimBitmap:(NSString*)filePath;
 - (void)setImageStimFromBitmap:(NSBitmapImageRep *)bmp;
+- (void)fillImageInTexture;
 - (void)makeBackgroundImage;
 - (void)makeBackgroundTexture;
 - (void)restore;
