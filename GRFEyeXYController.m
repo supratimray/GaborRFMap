@@ -209,7 +209,7 @@ NSString *GRFXYAutosaveKey = @"GRFXYAutosave";
 {
 	LLEyeCalibrationData cal;
     
-	[eventData getBytes:&cal];
+	[eventData getBytes:&cal length:sizeof(LLEyeCalibrationData)];
     
 	[unitsToDeg[eyeIndex] setTransformStruct:cal.calibration];
 	[degToUnits[eyeIndex] setTransformStruct:cal.calibration];
@@ -284,7 +284,7 @@ NSString *GRFXYAutosaveKey = @"GRFXYAutosave";
 
 	FixWindowData fixWindowData;
     
-	[eventData getBytes:&fixWindowData];
+	[eventData getBytes:&fixWindowData length:sizeof(FixWindowData)];
 	eyeWindowRectDeg = fixWindowData.windowDeg;
     [eyePlot setNeedsDisplay:YES];
 }
@@ -325,13 +325,13 @@ NSString *GRFXYAutosaveKey = @"GRFXYAutosave";
 {
 	FixWindowData respWindowData;
     
-	[eventData getBytes:&respWindowData];
+	[eventData getBytes:&respWindowData length:sizeof(FixWindowData)];
 	respWindowRectDeg = respWindowData.windowDeg;
 }
 
 - (void)trial:(NSData *)eventData eventTime:(NSNumber *)eventTime;
 {
-	[eventData getBytes:&trial];
+	[eventData getBytes:&trial length:sizeof(TrialDesc)];
     inTrial = YES;
 	respWindowIndex = kAttend0;
 }

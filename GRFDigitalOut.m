@@ -94,8 +94,9 @@
     else if ([eventName isEqualTo:@"type1"] || [eventName isEqualTo:@"T1"] )
         thisEventName = @"T1";
     else
-        NSRunAlertPanel(@"GRFDigitalOut",  @"Can't find digital event named \"%@\".",
-                        @"OK", nil, nil, eventName);
+        thisEventName = @"";
+//        NSRunAlertPanel(@"GRFDigitalOut",  @"Can't find digital event named \"%@\".",
+//                        @"OK", nil, nil, eventName);
     
     
     return thisEventName;
@@ -131,12 +132,12 @@
 	if ((self = [super init])) {
 		digitalOutDevice = (LLITC18DataDevice *)[[task dataController] deviceWithName:@"ITC-18 1"];
 		if (digitalOutDevice == nil) {
-			NSRunAlertPanel(@"GRFDigitalOut",  @"Can't find data device named \"%@\", trying ITC-18 instead.", 
-						@"OK", nil, nil, @"ITC-18 1");
+//			NSRunAlertPanel(@"GRFDigitalOut",  @"Can't find data device named \"%@\", trying ITC-18 instead.",
+//						@"OK", nil, nil, @"ITC-18 1");
 			digitalOutDevice = (LLITC18DataDevice *)[[task dataController] deviceWithName:@"ITC-18"];
 			if (digitalOutDevice == nil) {
-				NSRunAlertPanel(@"GaborRFMap",  @"Can't find data device named \"%@\" (Quitting)", 
-							@"OK", nil, nil, @"ITC-18");
+//				NSRunAlertPanel(@"GaborRFMap",  @"Can't find data device named \"%@\" (Quitting)",
+//							@"OK", nil, nil, @"ITC-18");
 				//exit(0);
 			}
 		}
