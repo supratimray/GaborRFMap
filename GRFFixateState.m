@@ -19,11 +19,17 @@
 	long fixDurBase, fixJitterMS;
 	long fixateMS = [[task defaults] integerForKey:GRFFixateMSKey];
 	long fixJitterPC = [[task defaults] integerForKey:GRFFixJitterPCKey];
-		
+    bool useFewDigitalCodes;
+    
+    useFewDigitalCodes = [[task defaults] boolForKey:GRFUseFewDigitalCodesKey];
+    
 	if ([[task defaults] boolForKey:GRFFixateKey]) {				// fixation required && fixated
-//        [digitalOut outputEvent:kFixateDigitOutCode withData:(kFixateDigitOutCode+1)]; // Thomas 2014 Feb 25
-        [digitalOut outputEventName:@"fixate" withData:(long)(fixateMS)];
-		[[task dataDoc] putEvent:@"fixate"];
+        if (useFewDigitalCodes)
+            [digitalOut outputEvent:kFixateDigitOutCode sleepInMicrosec:kSleepInMicrosec];
+        else
+            [digitalOut outputEventName:@"fixate" withData:(long)(fixateMS)];
+		
+        [[task dataDoc] putEvent:@"fixate"];
 		[scheduler schedule:@selector(updateCalibration) toTarget:self withObject:nil
 				delayMS:fixateMS * 0.8];
 		if ([[task defaults] boolForKey:GRFDoSoundsKey]) {

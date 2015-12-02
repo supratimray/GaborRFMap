@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6245" systemVersion="13F1077" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6245" systemVersion="13F1112" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment version="1050" identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6245"/>
@@ -969,7 +969,7 @@
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" multipleSelection="NO" autosaveName="GRFChangeArrayTable" headerView="2616" id="1496">
-                                    <rect key="frame" x="0.0" y="0.0" width="268" height="19"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="283" height="19"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1021,7 +1021,7 @@
                                                 <binding destination="1499" name="value" keyPath="arrangedObjects.validReps" id="1757"/>
                                             </connections>
                                         </tableColumn>
-                                        <tableColumn identifier="invalidReps" width="103.04638671875" minWidth="43.04638671875" maxWidth="1000" id="1755">
+                                        <tableColumn identifier="invalidReps" width="88.04638671875" minWidth="43.04638671875" maxWidth="1000" id="1755">
                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="center" title="Invalid">
                                                 <font key="font" metaFont="smallSystem"/>
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -3013,6 +3013,17 @@
                         </buttonCell>
                         <connections>
                             <binding destination="498" name="value" keyPath="values.GRFConvertToImage" id="6In-Li-TgH"/>
+                        </connections>
+                    </button>
+                    <button id="7eR-SY-7gZ">
+                        <rect key="frame" x="164" y="276" width="154" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="use few digital codes" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="Q0p-u4-UUR">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <binding destination="498" name="value" keyPath="values.GRFUseFewDigitalCodes" id="qKO-Yi-dL7"/>
                         </connections>
                     </button>
                 </subviews>

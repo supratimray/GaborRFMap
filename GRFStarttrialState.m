@@ -17,7 +17,10 @@
 {
 	long lValue;
 	FixWindowData fixWindowData, respWindowData;
-	
+    bool useFewDigitalCodes;
+    
+    useFewDigitalCodes = [[task defaults] boolForKey:GRFUseFewDigitalCodesKey];
+    
 	eotCode = -1;
     trialCounter++;
 	
@@ -43,11 +46,15 @@
 	[[task dataController] readDataFromDevices];		// flush data buffers
 	[[task collectorTimer] fire];
 	[[task dataDoc] putEvent:@"trialStart" withData:&trialCounter];
-//    [digitalOut outputEvent:kTrialStartDigitOutCode withData:trialCounter];
     [[task dataDoc] putEvent:@"trial" withData:&trial];
-    [digitalOut outputEventName:@"instructTrial" withData:(long)trial.instructTrial];
-	[digitalOut outputEventName:@"catchTrial" withData:(long)trial.catchTrial];
-    [digitalOut outputEventName:@"trialStart" withData:trialCounter sleepInMicrosec:kSleepInMicrosec];
+    
+    if (useFewDigitalCodes)
+        [digitalOut outputEvent:kTrialStartDigitOutCode sleepInMicrosec:kSleepInMicrosec];
+    else {
+        [digitalOut outputEventName:@"instructTrial" withData:(long)trial.instructTrial];
+        [digitalOut outputEventName:@"catchTrial" withData:(long)trial.catchTrial];
+        [digitalOut outputEventName:@"trialStart" withData:trialCounter sleepInMicrosec:kSleepInMicrosec];
+    }
 	lValue = 0;
 	[[task dataDoc] putEvent:@"sampleZero" withData:&lValue];	// for now, it has no practical functions
 	[[task dataDoc] putEvent:@"spikeZero" withData:&lValue];
