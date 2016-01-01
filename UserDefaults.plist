@@ -254,6 +254,8 @@
 	<false/>
 	<key>GRFConvertToImage</key>
 	<false/>
+	<key>GRFConvertToColor</key>
+	<false/>
 	<key>GRFUseSingleITC18</key>
 	<true/>
 	<key>GRFCueMS</key>
@@ -323,7 +325,7 @@
 	<key>GRFInterstimJitterPC</key>
 	<integer>50</integer>
 	<key>GRFInterstimMS</key>
-	<integer>250</integer>
+	<integer>700</integer>
 	<key>GRFInvalidRewardFactor</key>
 	<real>1</real>
 	<key>GRFKdlPhiDeg</key>
@@ -383,7 +385,7 @@
 	<key>GRFSpikeWindowZoom</key>
 	<integer>100</integer>
 	<key>GRFStimDurationMS</key>
-	<integer>250</integer>
+	<integer>800</integer>
 	<key>GRFStimDistribution</key>
 	<integer>0</integer>
 	<key>GRFStimJitterPC</key>

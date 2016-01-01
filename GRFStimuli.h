@@ -34,6 +34,8 @@ GRFStimuli.h
     LLPlaid                 *plaid;
     GRFImageStim            *imageStim;
     GRFSoundObjects         *player;
+    LLFixTarget             *colorSpot;
+    RGBFloat                rgb;
 }
 
 - (void)doFixSettings;
@@ -61,5 +63,7 @@ GRFStimuli.h
 - (void)tallyStimLists:(long)count;
 - (long)targetOnFrame;
 - (BOOL)targetPresented;
+- (RGBFloat)RGBFromIndex:(int)index factor:(int)factor;
+
 
 @end

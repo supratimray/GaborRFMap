@@ -44,6 +44,8 @@ NSString *stimulusMonitorID = @"GaborRFMap Stimulus";
     // bmpRep0 = [[NSBitmapImageRep alloc] initWithData:nil]; in -init
     // Therefore, we cannot release it ourselves
     // Probably it gets properly allocated and initialized only with a valid bitmap data as done in GRFImageStim.m for bmpRep
+    
+    [colorSpot release]; // [Vinay] - release the color Spot
 
     [super dealloc];
 }
@@ -119,6 +121,9 @@ NSString *stimulusMonitorID = @"GaborRFMap Stimulus";
     // Get the location of the sounds directory and init player object when Knot is initiated [MD 25/04/2015]
     player = [[GRFSoundObjects alloc] init];
     [player setDir:[self getResourcesFolder]];
+    
+    // [Vinay] - Initialize the color spot
+    colorSpot = [[LLFixTarget alloc] init];
 
 	return self;
 }
@@ -426,6 +431,21 @@ by mapStimTable.
     BOOL playAudStim;
     int kMapGaborAV;
     //NSColor *fixSpotColor;
+    BOOL convertToColor;
+    NSColor *colorSpotColor = NULL;
+    int rgbIndex,colorfactor;
+    BOOL setRGB = NO;
+    BOOL setLAB = NO;
+    BOOL useGaborColorStim = NO;
+    CGFloat hue,satu,value;
+    CGFloat whitepoint[3] = {0.964,1.000,0.825};
+    CGFloat blackpoint[3] = {0,0,0};
+    CGFloat colorRange[4] = {0,1,0,1};
+    CGColorSpaceRef colorSpaceLAB = CGColorSpaceCreateLab(whitepoint, blackpoint, colorRange);
+    CGFloat LABa,LABb,LABl,LABalpha;
+    CGColorRef colorSpotColorLAB;
+    
+    //float Rc,Gc,Bc,rgbIndex;
     
 	
     threadPool = [[NSAutoreleasePool alloc] init];		// create a threadPool for this thread
@@ -503,6 +523,9 @@ by mapStimTable.
         stimDescs[kMapGaborAV].stimType = audStim.stimType;
     }
     
+    // [Vinay] - Check if color stimulus is chosen
+    convertToColor = [[task defaults] boolForKey:GRFConvertToColorKey];
+    
 	targetOnFrame = -1;
 
     for (trialFrame = taskGaborFrame = 0; !listDone && !abortStimuli; trialFrame++) {
@@ -514,7 +537,71 @@ by mapStimTable.
 				if (stimDescs[index].stimType != kNullStim && stimDescs[index].stimType != kPlaidStim && stimDescs[index].stimType !=kAudStim && stimDescs[index].stimType !=kImageStim) {
                     theGabor = [gabors objectAtIndex:index];
                     [theGabor directSetFrame:[NSNumber numberWithLong:gaborFrames[index]]];	// advance for temporal modulation
-                    [theGabor draw];
+                    
+                    
+                    if (convertToColor) {
+                        
+                        if (useGaborColorStim) {
+                            [theGabor setAchromatic:NO];
+                            [theGabor setKdlThetaDeg:0];
+                            [theGabor setKdlPhiDeg:([theGabor directionDeg])];
+                            [theGabor directSetContrast:[theGabor contrast]*sqrt(2)];
+                            //[fixSpot setFixTargetColor:[NSColor colorWithCalibratedRed:1 green:0 blue:0 alpha:1]];
+                            //[theGabor setForeColor:[NSColor colorWithCalibratedRed:1 green:0 blue:0 alpha:1]];
+                            //[theGabor setForeOnRed:1 green:0 blue:0];
+                            
+                            [theGabor draw];
+
+                        }
+                        
+                        else {
+                            [colorSpot setState:YES];
+                            [colorSpot setShape:0]; // [Vinay] - 0:circle,1:square
+                        
+                            if (setRGB) {
+                                rgbIndex = (int)[theGabor directionDeg];
+                                colorfactor = (int)[theGabor spatialFreqCPD];
+                                rgb = [self RGBFromIndex:rgbIndex factor:colorfactor];
+                                rgb.red = rgb.red*(float)[theGabor contrast];
+                                rgb.green = rgb.green*(float)[theGabor contrast];
+                                rgb.blue = rgb.blue*(float)[theGabor contrast];
+                                colorSpotColor = [NSColor colorWithCalibratedRed:rgb.red green:rgb.green blue:rgb.blue alpha:1];
+                                [colorSpot setForeColor:colorSpotColor];
+
+                            }
+                            else if (setLAB) {
+                                //NSColorSpace *colorSpace = [[NSColorSpace alloc] initWithCGColorSpace:colorSpaceLAB];
+                                LABa = (CGFloat)[theGabor spatialFreqCPD];
+                                LABb = (CGFloat)((float)[theGabor directionDeg]/100.0);
+                                LABl = (CGFloat)[theGabor contrast]*sqrt(2);
+                                LABalpha = 1;
+                                CGFloat LABcomponents[] = {LABl, LABa, LABb, LABalpha};
+                                colorSpotColorLAB = CGColorCreate(colorSpaceLAB, LABcomponents);
+                                colorSpotColor = [NSColor colorWithCGColor:colorSpotColorLAB];
+                                [colorSpot setForeColor:colorSpotColor];
+                            }
+                            
+                            else {
+                                //hue = (CGFloat)((float)[theGabor directionDeg]*(float)(1/360));
+                                hue = (CGFloat)((float)[theGabor directionDeg]/360.0);
+                                satu = (CGFloat)[theGabor spatialFreqCPD];
+                                value = (CGFloat)[theGabor contrast]*sqrt(2);
+                                colorSpotColor = [NSColor colorWithCalibratedHue:hue saturation:satu brightness:value alpha:1];
+                                [colorSpot setForeColor:colorSpotColor];
+                            }
+                            [colorSpot directSetAzimuthDeg:[theGabor azimuthDeg] elevationDeg:[theGabor elevationDeg]];
+                            //[colorSpot setForeColor:[NSColor colorWithCalibratedRed:0 green:1 blue:0 alpha:1]];
+                            //[colorSpot setKdlPhiDeg:([theGabor directionDeg]*10)];
+                            //[colorSpot setKdlThetaDeg:0];
+                            //[colorSpot directSetRadiusDeg:[theGabor radiusDeg]];
+                            [colorSpot setOuterRadiusDeg:[theGabor radiusDeg]];
+                            [colorSpot setInnerRadiusDeg:0];
+                            [colorSpot draw];
+                        }
+                    }
+                    else {
+                        [theGabor draw];
+                    }
 /*
                     if (!trial.catchTrial && index == kTaskGabor && stimDescs[index].stimType == kTargetStim) {
                         [targetSpot setAzimuthDeg:stimDescs[index].azimuthDeg elevationDeg:stimDescs[index].elevationDeg];
@@ -879,4 +966,20 @@ by mapStimTable.
     
     return params;
 }
+
+- (RGBFloat)RGBFromIndex:(int)index factor:(int)factor;
+{
+    //RGBDouble rgb;
+    float mulfactor = 1/(float)(factor-1);
+    float rGain = (float)(index % factor);
+    float gGain = (float)((index/factor)%factor);
+    float bGain = (float)(((index/factor)/factor)%factor);
+    
+    rgb.red = rGain*mulfactor;
+    rgb.green = gGain*mulfactor;
+    rgb.blue = bGain*mulfactor;
+    
+    return (rgb);
+}
+
 @end

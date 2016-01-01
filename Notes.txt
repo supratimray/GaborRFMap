@@ -56,3 +56,30 @@ When running in fixation mode, the task stimulus duration and inter-stimulus int
 The protocol should generate auditory stimuli in addition to visual stimuli. The contrast and temporal frequency of the right visual stimulus should control the volume and type of auditory stimulus. Separate digital codes need to be sent for the auditory stimulus.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Changes made (21/08/15) Vinay Shirhatti
+
+To draw the images the following sequence is followed:
+1) Map the image numbers using spatial frequency value of Left Gabor and prepare the list of images in the trial in makeStimList
+2) Store their bitmap representations in mapStimImage
+3) Load the first Image bitmap in the textures and start the stimulus presentation sequence
+4) Load every subsequent Image bitmap in that trial on the frame preceding its stimOnFrame. This way the fixation spot does not seem to be changing its colour between stimuli.
+5) Clear mapStimImage after every trial ends
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Drawing color stimuli (circular patch of a certain color)
+% 08/09/15 Vinay Shirhatti
+
+Color stimuli are drawn as LLFixTarget
+HSV color space is used.
+Left Gabor parameters are used to set the color stimulus properties
+The variables are mapped as follows:
+orientation => hue
+spatial frequency => saturation
+contrast => value
+radius => outer radius
+
+I have included options to draw the stimuli using the RGB or the LAB color space as well, but these have to be explored and fine tuned.
+
+
+

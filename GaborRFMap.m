@@ -92,6 +92,9 @@ NSString *GRFConvertToPlaidKey = @"GRFConvertToPlaid";
 NSString *GRFConvertToImageKey = @"GRFConvertToImage";
 NSString *GRFPlayAudStimKey = @"GRFPlayAudStim";
 
+// [Vinay] - key to opt for color stimuli
+NSString *GRFConvertToColorKey = @"GRFConvertToColor";
+
 // Visual Stimulus Parameters 
 
 NSString *GRFSpatialPhaseDegKey = @"GRFSpatialPhaseDeg";

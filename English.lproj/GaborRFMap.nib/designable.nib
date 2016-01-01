@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6245" systemVersion="13F1077" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="13F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment version="1050" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6245"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5056"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="GaborRFMap">
@@ -969,7 +969,7 @@
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" multipleSelection="NO" autosaveName="GRFChangeArrayTable" headerView="2616" id="1496">
-                                    <rect key="frame" x="0.0" y="0.0" width="268" height="19"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="268" height="220"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1021,7 +1021,7 @@
                                                 <binding destination="1499" name="value" keyPath="arrangedObjects.validReps" id="1757"/>
                                             </connections>
                                         </tableColumn>
-                                        <tableColumn identifier="invalidReps" width="103.04638671875" minWidth="43.04638671875" maxWidth="1000" id="1755">
+                                        <tableColumn identifier="invalidReps" width="88.04638671875" minWidth="43.04638671875" maxWidth="1000" id="1755">
                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="center" title="Invalid">
                                                 <font key="font" metaFont="smallSystem"/>
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1372,7 +1372,7 @@
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnReordering="NO" columnSelection="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="18" id="1841">
-                                                        <rect key="frame" x="0.0" y="0.0" width="598" height="20"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="598" height="40"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <size key="intercellSpacing" width="3" height="2"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1536,7 +1536,7 @@
                                                                             <fragment content="0"/>
                                                                         </attributedString>
                                                                         <decimal key="minimum" value="0"/>
-                                                                        <decimal key="maximum" value="180"/>
+                                                                        <real key="maximum" value="360"/>
                                                                     </numberFormatter>
                                                                     <font key="font" metaFont="system"/>
                                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -2138,7 +2138,7 @@
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="18" id="1831">
-                                                        <rect key="frame" x="0.0" y="0.0" width="598" height="20"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="598" height="40"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <size key="intercellSpacing" width="3" height="2"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -3015,6 +3015,17 @@
                             <binding destination="498" name="value" keyPath="values.GRFConvertToImage" id="6In-Li-TgH"/>
                         </connections>
                     </button>
+                    <button id="xBQ-Jd-XZL">
+                        <rect key="frame" x="248" y="188" width="164" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="Color" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="MnF-uu-6BQ">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <binding destination="498" name="value" keyPath="values.GRFConvertToColor" id="9ND-X4-WaI"/>
+                        </connections>
+                    </button>
                 </subviews>
             </view>
         </window>
@@ -3094,7 +3105,7 @@
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" headerView="1Es-uu-TpH" id="gsx-2q-gXq">
-                        <rect key="frame" x="0.0" y="0.0" width="238" height="19"/>
+                        <rect key="frame" x="0.0" y="0.0" width="238" height="117"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <size key="intercellSpacing" width="3" height="2"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -3152,7 +3163,7 @@
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" headerView="W3G-zC-Miw" id="Na8-g1-D9S">
-                        <rect key="frame" x="0.0" y="0.0" width="238" height="19"/>
+                        <rect key="frame" x="0.0" y="0.0" width="238" height="117"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <size key="intercellSpacing" width="3" height="2"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

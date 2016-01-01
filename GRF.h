@@ -248,6 +248,9 @@ extern NSString *GRFConvertToPlaidKey;
 extern NSString *GRFConvertToImageKey;
 extern NSString *GRFPlayAudStimKey;
 
+// [Vinay] - key to opt for color stimuli
+extern NSString *GRFConvertToColorKey;
+
 long		argRand;
 
 #import "GRFStimuli.h"
