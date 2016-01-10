@@ -366,15 +366,13 @@ maxTargetS and a long stimLeadMS).
             CFBitVectorSetAllBits(localList, 0);
 			localFreshCount = stimInBlock;
 		}
-        NSLog(@"gabor: %ld",index);
-        NSLog(@"stimIndex: %d",stimIndex);
+
 	}
 //	[self dumpStimList:list listIndex:index];
 	[currentStimList release];
 	currentStimList = [list retain];
 	// Count the stimlist as completed
-    
-    NSLog(@"localList: %@",localList);
+
 }
 
 - (MappingBlockStatus)mappingBlockStatus;
@@ -481,7 +479,6 @@ maxTargetS and a long stimLeadMS).
 			[self newBlock];
 			blocksDone++;
 		}
-        //NSLog(@"doneList 1: %@",doneList);
 	}
 	return;
 }
@@ -520,7 +517,6 @@ maxTargetS and a long stimLeadMS).
 			[self newBlock];
 			blocksDone++;
 		}
-        //NSLog(@"doneList 2: %@",doneList);
 	}
 	return;
 }

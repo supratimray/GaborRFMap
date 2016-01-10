@@ -81,5 +81,37 @@ radius => outer radius
 
 I have included options to draw the stimuli using the RGB or the LAB color space as well, but these have to be explored and fine tuned.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Track the stimuli done in a block correctly
+% 10/01/16 Vinay Shirhatti
+
+All the stimuli in the set must be exhausted before moving to the next block. However this was not happening correctly in some cases. The count for some stimuli far exceeded the number of blocks done, whereas it was lesser for some others.
+The problem was that doneList was being initialized only once in the beginning and therefore its size was fixed to the size decided by the initial stimulus-parameter counts.
+When running the task the localList gets updated with the latest doneList in makeMapStimList
+
+>>
+localList = CFBitVectorCreateMutableCopy(NULL, stimInBlock, doneList);
+CFBitVectorSetCount(localList, stimInBlock);
+<<
+
+When one runs a protocol with some number of stimuli 'n', finishes it and then resets the parameters for another protocol, the number of stimuli in the new protocol (say 'm') may not be equal to n. If it is m<n then doneList is larger than required and it still tracks the stimuli done correctly. However there is a problem when m>n. In this case, suppose a stimulus 'i' (m>i>n) is done. This is tracked in localList in that mapping loop.
+
+>>
+CFBitVectorSetBitAtIndex(localList, stimIndex, 1);
+<<
+
+However this is not tracked by doneList in tallyStimList, because the stimIndex is beyond the length of doneList
+>>
+CFBitVectorSetBitAtIndex(doneList, stimIndex, 1);
+<<
+
+As a result when localList gets updated with doneList the next time, it loses track of stimulus 'i' (it is automaticaly set as '0').
+Therefore it might so happen that stimulus 'i' repeats in the same block.
+On the other hand, stimRemainingInBlock decrements irrespective of all this. Eventually one might reach a stage where stimRemainingInBlock decrements to 0, with some stimuli (numbered >n) repeated multiple times and some others (numbered <=n) not done in that block.
+Thus, this may lead to a discrepancy/dissimilarity in the number of repeats of stimuli across all blocks.
+
+
+To address this problem, doneList must be updated/reinitialized every time there is any change made to the stimulus mapping fields. This is now done in 'reset' function in GRFMapStimTable.m
 
 
