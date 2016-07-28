@@ -24,15 +24,16 @@ enum {kRewardFixed = 0, kRewardVariable};
 enum {kNullStim = 0, kValidStim, kTargetStim, kFrontPadding, kBackPadding, kPlaidStim, kAudStim, kVisAudStim, kImageStim};
 enum {kMyEOTCorrect = 0, kMyEOTMissed, kMyEOTEarlyToValid, kMyEOTEarlyToInvalid, kMyEOTBroke, 
 				kMyEOTIgnored, kMyEOTQuit, kMyEOTTypes};
-enum {  kTrialStartDigitOutCode = 0x0010,
-        kFixateDigitOutCode = 0x0020,
-        kStimulusOnDigitOutCode = 0x0030,
-        kStimulusOffDigitOutCode = 0x0040,
-        kTargetOnDigitOutCode = 0x0050,
-        kSaccadeDigitOutCode = 0x0060,
-        kTrialEndDigitOutCode = 0x0070};
+enum {  kDefaultStateDigitOutCode = 1,
+        kTrialStartDigitOutCode = 2,
+        kFixateDigitOutCode = 4,
+        kStimulusOnDigitOutCode = 8,
+        kStimulusOffDigitOutCode = 16,
+        kTargetOnDigitOutCode = 32,
+        kSaccadeDigitOutCode = 64,
+        kTrialEndDigitOutCode = 128};
 
-#define	kSleepInMicrosec	5000
+#define	kSleepInMicrosec	2000
 #define	kMaxOriChanges      12
 #define kMaxMapValues       12
 
@@ -239,6 +240,7 @@ extern NSString *GRFHideLeftDigitalKey;
 extern NSString *GRFHideRightDigitalKey;
 extern NSString *GRFConvertToGratingKey;
 extern NSString *GRFUseSingleITC18Key;
+extern NSString *GRFUseFewDigitalCodesKey;
 
 extern NSString *GRFHideTaskGaborKey;
 extern NSString *GRFIncludeCatchTrialsinDoneListKey;

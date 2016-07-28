@@ -175,6 +175,22 @@
 	return YES;
 }
 
+- (BOOL)outputEvent:(long)event sleepInMicrosec:(int)sleepTimeInMicrosec;
+{
+    
+    if (digitalOutDevice == nil) {
+        return NO;
+    }
+    [lock lock];
+    
+    [[task dataController] digitalOutputBits:((event | 0x8001))];
+    if (sleepTimeInMicrosec>0)
+        usleep(sleepTimeInMicrosec);
+
+    [lock unlock];
+    return YES;
+}
+
 - (BOOL)outputEventName:(NSString *)eventName withData:(long)data;
 {
     [self outputEventName:eventName withData:data sleepInMicrosec:0];

@@ -13,9 +13,14 @@
 
 - (void)stateAction {
 
+    bool useFewDigitalCodes;
+    
+    useFewDigitalCodes = [[task defaults] boolForKey:GRFUseFewDigitalCodesKey];
+    
     [stimuli setFixSpot:YES];
 	[[task dataDoc] putEvent:@"fixOn"];
-    [digitalOut outputEventName:@"fixOn" withData:0x0000];
+    if (!useFewDigitalCodes)
+        [digitalOut outputEventName:@"fixOn" withData:0x0000];
     [[task synthDataDevice] setEyeTargetOn:NSMakePoint(0, 0)];
 	expireTime = [LLSystemUtil timeFromNow:[[task defaults] integerForKey:GRFAcquireMSKey]];
 	if ([[task defaults] boolForKey:GRFDoSoundsKey]) {

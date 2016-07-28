@@ -446,6 +446,9 @@ by mapStimTable.
     CGColorRef colorSpotColorLAB;
     
     //float Rc,Gc,Bc,rgbIndex;
+    bool useFewDigitalCodes;
+    
+    useFewDigitalCodes = [[task defaults] boolForKey:GRFUseFewDigitalCodesKey];
     
 	
     threadPool = [[NSAutoreleasePool alloc] init];		// create a threadPool for this thread
@@ -657,8 +660,8 @@ by mapStimTable.
 			if (trialFrame == stimOffFrames[index]) {
                 [[task dataDoc] putEvent:@"stimulusOff" withData:&index];
                 [[task dataDoc] putEvent:@"stimulusOffTime"];
-                if (!useSingleITC18) {
-                    [digitalOut outputEvent:kStimulusOffDigitOutCode withData:index];
+                if (useFewDigitalCodes && (index==0)) {
+                    [digitalOut outputEvent:kStimulusOffDigitOutCode sleepInMicrosec:kSleepInMicrosec];
                 }
 				if (++stimIndices[index] >= [[stimLists objectAtIndex:index] count]) {	// no more entries in list
 					listDone = YES;
@@ -672,60 +675,63 @@ by mapStimTable.
                 [[task dataDoc] putEvent:@"stimulusOnTime"];
                 [[task dataDoc] putEvent:@"stimulus" withData:pSD];
 
-                if (!useSingleITC18) {
-                    [digitalOut outputEvent:kStimulusOnDigitOutCode withData:index];
+                if (useFewDigitalCodes) {
+                    if (index==0)
+                        [digitalOut outputEvent:kStimulusOnDigitOutCode sleepInMicrosec:kSleepInMicrosec];
                 }
-				// put the digital events
-				if (index == kTaskGabor) {
-					[digitalOut outputEventName:@"taskGabor" withData:(long)(pSD->stimType)];
-				}
-				else {
-					if (pSD->stimType != kNullStim) {
-						if (index == kMapGabor0)
-							[digitalOut outputEventName:@"mapping0" withData:(long)(pSD->stimType)];
-						if (index == kMapGabor1)
-							[digitalOut outputEventName:@"mapping1" withData:(long)(pSD->stimType)];
-					}
-				}
+                else {
+                    // put the digital events
+                    if (index == kTaskGabor) {
+                        [digitalOut outputEventName:@"taskGabor" withData:(long)(pSD->stimType)];
+                    }
+                    else {
+                        if (pSD->stimType != kNullStim) {
+                            if (index == kMapGabor0)
+                                [digitalOut outputEventName:@"mapping0" withData:(long)(pSD->stimType)];
+                            if (index == kMapGabor1)
+                                [digitalOut outputEventName:@"mapping1" withData:(long)(pSD->stimType)];
+                        }
+                    }
                 
-                if (convertToPlaid && !convertToImage && index == kMapGabor0) {
-                    [digitalOut outputEventName:@"mappingPlaid" withData:(long)(pSD->stimType)];
-                }
+                    if (convertToPlaid && !convertToImage && index == kMapGabor0) {
+                        [digitalOut outputEventName:@"mappingPlaid" withData:(long)(pSD->stimType)];
+                    }
                 
-                if (convertToImage && index == kMapGabor0) {
-                    [digitalOut outputEventName:@"imageStimulus" withData:(long)(stimDescs[kMapGabor0].temporalFreqHz)];
+                    if (convertToImage && index == kMapGabor0) {
+                        [digitalOut outputEventName:@"imageStimulus" withData:(long)(stimDescs[kMapGabor0].temporalFreqHz)];
+                    }
+				
+                    // Other prperties of the Gabor
+                    if (index == kMapGabor0 && pSD->stimType != kNullStim && !([[task defaults] boolForKey:GRFHideLeftDigitalKey])) {
+                        //NSLog(@"Sending left digital codes...");
+                        [digitalOut outputEventName:@"contrast" withData:(long)(10*(pSD->contrastPC))];
+                        [digitalOut outputEventName:@"temporalFreq" withData:(long)(10*(pSD->temporalFreqHz))];
+                        [digitalOut outputEventName:@"azimuth" withData:(long)(100*(pSD->azimuthDeg))];
+                        [digitalOut outputEventName:@"elevation" withData:(long)(100*(pSD->elevationDeg))];
+                        [digitalOut outputEventName:@"orientation" withData:(long)((pSD->directionDeg))];
+                        [digitalOut outputEventName:@"spatialFreq" withData:(long)(100*(pSD->spatialFreqCPD))];
+                        [digitalOut outputEventName:@"radius" withData:(long)(100*(pSD->radiusDeg))];
+                        [digitalOut outputEventName:@"sigma" withData:(long)(100*(pSD->sigmaDeg))];
+                    }
+				
+                    if (index == kMapGabor1 && pSD->stimType != kNullStim && !([[task defaults] boolForKey:GRFHideRightDigitalKey])) {
+                        //NSLog(@"Sending right digital codes...");
+                        [digitalOut outputEventName:@"contrast" withData:(long)(10*(pSD->contrastPC))];
+                        [digitalOut outputEventName:@"temporalFreq" withData:(long)(10*(pSD->temporalFreqHz))];
+                        [digitalOut outputEventName:@"azimuth" withData:(long)(100*(pSD->azimuthDeg))];
+                        [digitalOut outputEventName:@"elevation" withData:(long)(100*(pSD->elevationDeg))];
+                        [digitalOut outputEventName:@"orientation" withData:(long)((pSD->directionDeg))];
+                        [digitalOut outputEventName:@"spatialFreq" withData:(long)(100*(pSD->spatialFreqCPD))];
+                        [digitalOut outputEventName:@"radius" withData:(long)(100*(pSD->radiusDeg))];
+                        [digitalOut outputEventName:@"sigma" withData:(long)(100*(pSD->sigmaDeg))];
+                    }
                 }
-				
-				// Other prperties of the Gabor
-				if (index == kMapGabor0 && pSD->stimType != kNullStim && !([[task defaults] boolForKey:GRFHideLeftDigitalKey])) {
-					//NSLog(@"Sending left digital codes...");
-					[digitalOut outputEventName:@"contrast" withData:(long)(10*(pSD->contrastPC))];
-                    [digitalOut outputEventName:@"temporalFreq" withData:(long)(10*(pSD->temporalFreqHz))];
-					[digitalOut outputEventName:@"azimuth" withData:(long)(100*(pSD->azimuthDeg))];
-					[digitalOut outputEventName:@"elevation" withData:(long)(100*(pSD->elevationDeg))];
-					[digitalOut outputEventName:@"orientation" withData:(long)((pSD->directionDeg))];
-					[digitalOut outputEventName:@"spatialFreq" withData:(long)(100*(pSD->spatialFreqCPD))];
-					[digitalOut outputEventName:@"radius" withData:(long)(100*(pSD->radiusDeg))];
-					[digitalOut outputEventName:@"sigma" withData:(long)(100*(pSD->sigmaDeg))];
-				}
-				
-				if (index == kMapGabor1 && pSD->stimType != kNullStim && !([[task defaults] boolForKey:GRFHideRightDigitalKey])) {
-					//NSLog(@"Sending right digital codes...");
-					[digitalOut outputEventName:@"contrast" withData:(long)(10*(pSD->contrastPC))];
-                    [digitalOut outputEventName:@"temporalFreq" withData:(long)(10*(pSD->temporalFreqHz))];
-					[digitalOut outputEventName:@"azimuth" withData:(long)(100*(pSD->azimuthDeg))];
-					[digitalOut outputEventName:@"elevation" withData:(long)(100*(pSD->elevationDeg))];
-					[digitalOut outputEventName:@"orientation" withData:(long)((pSD->directionDeg))];
-					[digitalOut outputEventName:@"spatialFreq" withData:(long)(100*(pSD->spatialFreqCPD))];
-					[digitalOut outputEventName:@"radius" withData:(long)(100*(pSD->radiusDeg))];
-					[digitalOut outputEventName:@"sigma" withData:(long)(100*(pSD->sigmaDeg))];
-				}
                 
                 if (pSD->stimType == kTargetStim) {
 					targetPresented = YES;
 					targetOnFrame = trialFrame;
-                    if (!useSingleITC18) {
-                        [digitalOut outputEvent:kTargetOnDigitOutCode withData:(kTargetOnDigitOutCode+1)];
+                    if (useFewDigitalCodes && (index==0)) {
+                        [digitalOut outputEvent:kTargetOnDigitOutCode sleepInMicrosec:kSleepInMicrosec];
                     }
 				}
 				stimOffFrames[index] = stimDescs[index].stimOffFrame;		// previous done by now, save time for this one

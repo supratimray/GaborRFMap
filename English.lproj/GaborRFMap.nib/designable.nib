@@ -3015,6 +3015,17 @@
                             <binding destination="498" name="value" keyPath="values.GRFConvertToImage" id="6In-Li-TgH"/>
                         </connections>
                     </button>
+                    <button id="1IT-AQ-vRB">
+                        <rect key="frame" x="183" y="276" width="154" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="use few digital codes" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="Cf9-dN-dVA">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <binding destination="498" name="value" keyPath="values.GRFUseFewDigitalCodes" id="kod-ef-JJ2"/>
+                        </connections>
+                    </button>
                     <button id="xBQ-Jd-XZL">
                         <rect key="frame" x="248" y="188" width="164" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>

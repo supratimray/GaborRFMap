@@ -83,6 +83,7 @@ NSString *GRFHideLeftDigitalKey = @"GRFHideLeftDigital";
 NSString *GRFHideRightDigitalKey = @"GRFHideRightDigital";
 NSString *GRFConvertToGratingKey = @"GRFConvertToGrating";
 NSString *GRFUseSingleITC18Key = @"GRFUseSingleITC18";
+NSString *GRFUseFewDigitalCodesKey = @"GRFUseFewDigitalCodes";
 
 NSString *GRFHideTaskGaborKey = @"GRFHideTaskGabor";
 NSString *GRFIncludeCatchTrialsinDoneListKey = @"GRFIncludeCatchTrialsinDoneList";
