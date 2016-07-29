@@ -26,7 +26,7 @@
 	if ([task mode] == kTaskEnding) {
 		return [[task stateSystem] stateNamed:@"GRFStop"];
     }
-	if (![task mode] == kTaskIdle) {
+	if ([task mode] != kTaskIdle) {
 		return [[task stateSystem] stateNamed:@"GRFIntertrial"];
     }
 	else {
