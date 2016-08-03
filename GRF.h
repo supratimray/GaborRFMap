@@ -33,7 +33,7 @@ enum {  kDefaultStateDigitOutCode = 1,
         kSaccadeDigitOutCode = 64,
         kTrialEndDigitOutCode = 128};
 
-#define	kSleepInMicrosec	2000
+#define	kSleepInMicrosec	3000
 #define	kMaxOriChanges      12
 #define kMaxMapValues       12
 

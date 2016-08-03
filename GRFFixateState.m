@@ -70,7 +70,7 @@
 - (void)updateCalibration;
 {
 	if ([GRFUtilities inWindow:fixWindow]) {
-		[[task eyeCalibrator] updateCalibration:([task currentEyesDeg])[kRightEye]];
+		[[task eyeCalibrator] updateCalibration:([task currentEyesDeg])[kLeftEye]];
 	}
 }
 
