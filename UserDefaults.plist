@@ -256,6 +256,8 @@
 	<false/>
 	<key>GRFConvertToColor</key>
 	<false/>
+	<key>GRFConvertToColorGabor</key>
+	<false/>
 	<key>GRFUseSingleITC18</key>
 	<true/>
 	<key>GRFUseFewDigitalCodes</key>

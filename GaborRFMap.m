@@ -95,6 +95,7 @@ NSString *GRFPlayAudStimKey = @"GRFPlayAudStim";
 
 // [Vinay] - key to opt for color stimuli
 NSString *GRFConvertToColorKey = @"GRFConvertToColor";
+NSString *GRFConvertToColorGaborKey = @"GRFConvertToColorGabor";
 
 // Visual Stimulus Parameters 
 

@@ -252,6 +252,7 @@ extern NSString *GRFPlayAudStimKey;
 
 // [Vinay] - key to opt for color stimuli
 extern NSString *GRFConvertToColorKey;
+extern NSString *GRFConvertToColorGaborKey;
 
 long		argRand;
 

@@ -3037,6 +3037,17 @@
                             <binding destination="498" name="value" keyPath="values.GRFConvertToColor" id="9ND-X4-WaI"/>
                         </connections>
                     </button>
+                    <button id="RTD-Y2-DC9">
+                        <rect key="frame" x="248" y="170" width="164" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="ColorGabor" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="H4J-4e-pX5">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <binding destination="498" name="value" keyPath="values.GRFConvertToColorGabor" id="QbP-Lk-bBz"/>
+                        </connections>
+                    </button>
                 </subviews>
             </view>
         </window>
