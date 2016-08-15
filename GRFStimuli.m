@@ -423,14 +423,12 @@ by mapStimTable.
 	LLGabor *theGabor,*theGabor2;
 	NSAutoreleasePool *threadPool;
 	BOOL listDone = NO;
-//	long stimCounter = 0;
     BOOL useSingleITC18;
     BOOL convertToPlaid;
     BOOL convertToImage;
     // local variables related to auditory stimulus [MD 25/04/2015]
     BOOL playAudStim;
     int kMapGaborAV;
-    //NSColor *fixSpotColor;
     BOOL convertToColor;
     NSColor *colorSpotColor = NULL;
     int rgbIndex,colorfactor;
@@ -493,7 +491,6 @@ by mapStimTable.
     convertToImage = [[task defaults] boolForKey:GRFConvertToImageKey];
     
     if (convertToImage) {
-        //[self loadImage:&stimDescs[kMapGabor0]];
         [self loadImageFromBitmap:&stimDescs[kMapGabor0] bitmapFile:[mapStimImage objectAtIndex:0]];
         stimDescs[kMapGabor0].stimType=kImageStim;
     }
@@ -547,15 +544,13 @@ by mapStimTable.
                     if (convertToColor) {
                         
                         if (convertToColorGabor) {
-                            [theGabor setAchromatic:NO];
-                            [theGabor setKdlThetaDeg:0];
-                            [theGabor setKdlPhiDeg:([theGabor directionDeg])];
-                            [theGabor directSetContrast:[theGabor contrast]*sqrt(2)];
-                            //[fixSpot setFixTargetColor:[NSColor colorWithCalibratedRed:1 green:0 blue:0 alpha:1]];
-                            //[theGabor setForeColor:[NSColor colorWithCalibratedRed:1 green:0 blue:0 alpha:1]];
-                            //[theGabor setForeOnRed:1 green:0 blue:0];
-                            
-                            [theGabor draw];
+                            // [Vinay] color properties from left gabor & the non-color properties from right gabor
+                            theGabor2 = [gabors objectAtIndex:2];
+                            [theGabor2 setAchromatic:NO];
+                            [theGabor2 setKdlThetaDeg:0];
+                            [theGabor2 setKdlPhiDeg:([theGabor directionDeg])];
+                            [theGabor2 directSetFrame:[NSNumber numberWithLong:gaborFrames[index]]];
+                            [theGabor2 draw];
 
                         }
                         
@@ -566,7 +561,9 @@ by mapStimTable.
                             float directionDegMax = [[maxDefaults objectForKey:@"orientationDeg0"] floatValue];
                             
                             if ((convertToGrating) & ([theGabor directionDeg]==directionDegMax)) {
+                                [theGabor2 setAchromatic:YES];
                                 theGabor2 = [gabors objectAtIndex:2]; // [Vinay] right gabor
+                                [theGabor2 directSetFrame:[NSNumber numberWithLong:gaborFrames[index]]];
                                 [theGabor2 draw];
                             }
                             
@@ -586,10 +583,9 @@ by mapStimTable.
 
                                 }
                                 else if (setLAB) {
-                                    //NSColorSpace *colorSpace = [[NSColorSpace alloc] initWithCGColorSpace:colorSpaceLAB];
                                     LABa = (CGFloat)[theGabor spatialFreqCPD];
                                     LABb = (CGFloat)((float)[theGabor directionDeg]/100.0);
-                                    LABl = (CGFloat)[theGabor contrast]*sqrt(2);
+                                    LABl = (CGFloat)[theGabor contrast];
                                     LABalpha = 1;
                                     CGFloat LABcomponents[] = {LABl, LABa, LABb, LABalpha};
                                     colorSpotColorLAB = CGColorCreate(colorSpaceLAB, LABcomponents);
@@ -598,18 +594,13 @@ by mapStimTable.
                                 }
                                 
                                 else {
-                                    //hue = (CGFloat)((float)[theGabor directionDeg]*(float)(1/360));
                                     hue = (CGFloat)((float)[theGabor directionDeg]/360.0);
                                     satu = (CGFloat)[theGabor spatialFreqCPD];
-                                    value = (CGFloat)[theGabor contrast]*sqrt(2);
+                                    value = (CGFloat)[theGabor contrast];
                                     colorSpotColor = [NSColor colorWithCalibratedHue:hue saturation:satu brightness:value alpha:1];
                                     [colorSpot setForeColor:colorSpotColor];
                                 }
                                 [colorSpot directSetAzimuthDeg:[theGabor azimuthDeg] elevationDeg:[theGabor elevationDeg]];
-                                //[colorSpot setForeColor:[NSColor colorWithCalibratedRed:0 green:1 blue:0 alpha:1]];
-                                //[colorSpot setKdlPhiDeg:([theGabor directionDeg]*10)];
-                                //[colorSpot setKdlThetaDeg:0];
-                                //[colorSpot directSetRadiusDeg:[theGabor radiusDeg]];
                                 [colorSpot setOuterRadiusDeg:[theGabor radiusDeg]];
                                 [colorSpot setInnerRadiusDeg:0];
                                 [colorSpot draw];
@@ -649,8 +640,6 @@ by mapStimTable.
 
 		}
 
-		//fixSpotColor = [fixSpot fixTargetColor];
-        //[fixSpot setFixTargetColor:fixSpotColor];
         [fixSpot draw];
 		[[NSOpenGLContext currentContext] flushBuffer];
 		glFinish();
