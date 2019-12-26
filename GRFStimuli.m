@@ -554,8 +554,8 @@ by mapStimTable.
                             // [Vinay] color properties from left gabor & the non-color properties from right gabor
                             theGabor2 = [gabors objectAtIndex:2];
                             [theGabor2 setAchromatic:NO];
-                            [theGabor2 setKdlThetaDeg:0];
-                            [theGabor2 setKdlPhiDeg:([theGabor directionDeg])];
+                            [theGabor2 setKdlThetaDeg:([theGabor azimuthDeg])];
+                            [theGabor2 setKdlPhiDeg:([theGabor elevationDeg])];
                             [theGabor2 directSetFrame:[NSNumber numberWithLong:gaborFrames[index]]];
                             [theGabor2 draw];
 
