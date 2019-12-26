@@ -26,6 +26,7 @@
 					kEOTIgnored, kEOTQuit};
     
     bool useFewDigitalCodes;
+    bool combineStimLists;
 	
 	[stimuli stopAllStimuli];
 
@@ -87,8 +88,16 @@
 		else  {
             if ((!trial.catchTrial) || ([[task defaults] boolForKey:GRFIncludeCatchTrialsinDoneListKey])) { // update if it is not a catch trial or if GRFIncludeCatchTrialsinDoneList is set to YES
                 blockStatus.validRepsDone[trial.orientationChangeIndex]++;
-                [[(GaborRFMap *)task mapStimTable0] tallyStimList:nil upToFrame:[stimuli targetOnFrame]];
-                [[(GaborRFMap *)task mapStimTable1] tallyStimList:nil upToFrame:[stimuli targetOnFrame]];
+                
+                combineStimLists = [[task defaults] boolForKey:GRFConvertToPlaidKey];
+                
+                if (combineStimLists) {
+                    [[(GaborRFMap *)task mapStimTable0] tallyCombinedStimList:nil list1:nil upToFrame:[stimuli targetOnFrame]];
+                }
+                else {
+                    [[(GaborRFMap *)task mapStimTable0] tallyStimList:nil upToFrame:[stimuli targetOnFrame]];
+                    [[(GaborRFMap *)task mapStimTable1] tallyStimList:nil upToFrame:[stimuli targetOnFrame]];
+                }
                 mappingBlockStatus =  [[(GaborRFMap *)task mapStimTable0] mappingBlockStatus];
             }
         }

@@ -24,6 +24,7 @@
 	int stimRemainingInBlock;
 	int stimInBlock;
 	NSMutableArray *currentStimList;
+    NSMutableArray *currentStimList1; // Two lists have to be retained if the StimLists are being combined
 }
 
 - (long)blocksDone;
@@ -33,6 +34,7 @@
 - (float)linearValueWithIndex:(long)index count:(long)count min:(float)min max:(float)max;
 - (float)logValueWithIndex:(long)index count:(long)count min:(float)min max:(float)max;
 - (void)makeMapStimList:(NSMutableArray *)list index:(long)index lastFrame:(long)lastFrame pTrial:(TrialDesc *)pTrial;
+- (void)makeCombinedMapStimList:(NSMutableArray *)list0 list1:(NSMutableArray *)list1 lastFrame:(long)lastFrame pTrial:(TrialDesc *)pTrial;
 - (MappingBlockStatus)mappingBlockStatus;
 - (MapSettings)mapSettings;
 - (void)newBlock;
@@ -40,6 +42,8 @@
 - (long)stimInBlock;
 - (void)tallyStimList:(NSMutableArray *)list  count:(long)count;
 - (void)tallyStimList:(NSMutableArray *)list  upToFrame:(long)frameLimit;
+- (void)tallyCombinedStimList:(NSMutableArray *)list0 list1:(NSMutableArray *)list1 count:(long)count;
+- (void)tallyCombinedStimList:(NSMutableArray *)list0 list1:(NSMutableArray *)list1 upToFrame:(long)frameLimit;
 - (long)stimDoneInBlock;
 - (void)updateBlockParameters;
 

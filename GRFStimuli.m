@@ -192,7 +192,8 @@ by mapStimTable.
 	LLGabor *taskGabor = [self taskGabor];
     BOOL convertToImage;
     NSString *imageFile;
-	
+    BOOL combineStimLists;
+    
     trial = *pTrial;
 	[taskStimList removeAllObjects];
 	targetIndex = MIN(pTrial->targetIndex, pTrial->numStim);
@@ -282,8 +283,14 @@ by mapStimTable.
 	
 // The task stim list is done, now we need to get the mapping stim lists
 
-    [[(GaborRFMap*)task mapStimTable0] makeMapStimList:mapStimList0 index:0 lastFrame:lastStimOffFrame pTrial:pTrial];
-	[[(GaborRFMap*)task mapStimTable1] makeMapStimList:mapStimList1 index:1 lastFrame:lastStimOffFrame pTrial:pTrial];
+    combineStimLists = [[task defaults] boolForKey:GRFConvertToPlaidKey];
+    if (combineStimLists) {
+        [[(GaborRFMap*)task mapStimTable0] makeCombinedMapStimList:mapStimList0 list1:mapStimList1 lastFrame:lastStimOffFrame pTrial:pTrial]; // both mapping lists updated here. No need to worry about mapStimTable1
+    }
+    else {
+        [[(GaborRFMap*)task mapStimTable0] makeMapStimList:mapStimList0 index:0 lastFrame:lastStimOffFrame pTrial:pTrial];
+        [[(GaborRFMap*)task mapStimTable1] makeMapStimList:mapStimList1 index:1 lastFrame:lastStimOffFrame pTrial:pTrial];
+    }
     
 // [Vinay] - Prepare the image stimuli
     convertToImage = [[task defaults] boolForKey:GRFConvertToImageKey];
@@ -886,8 +893,15 @@ by mapStimTable.
 
 - (void)tallyStimLists:(long)count
 {
-	[[(GaborRFMap *)task mapStimTable0] tallyStimList:mapStimList0 count:count];
-	[[(GaborRFMap *)task mapStimTable1] tallyStimList:mapStimList1 count:count];
+    BOOL combineStimLists = [[task defaults] boolForKey:GRFConvertToPlaidKey];
+    
+    if (combineStimLists) {
+        [[(GaborRFMap *)task mapStimTable0] tallyCombinedStimList:mapStimList0 list1:mapStimList1 count:count];
+    }
+    else {
+        [[(GaborRFMap *)task mapStimTable0] tallyStimList:mapStimList0 count:count];
+        [[(GaborRFMap *)task mapStimTable1] tallyStimList:mapStimList1 count:count];
+    }
 }
 
 - (long)targetOnFrame;
