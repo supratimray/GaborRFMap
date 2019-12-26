@@ -89,7 +89,7 @@
             if ((!trial.catchTrial) || ([[task defaults] boolForKey:GRFIncludeCatchTrialsinDoneListKey])) { // update if it is not a catch trial or if GRFIncludeCatchTrialsinDoneList is set to YES
                 blockStatus.validRepsDone[trial.orientationChangeIndex]++;
                 
-                combineStimLists = [[task defaults] boolForKey:GRFConvertToPlaidKey];
+                combineStimLists = [[task defaults] boolForKey:GRFCombineStimListsKey];
                 
                 if (combineStimLists) {
                     [[(GaborRFMap *)task mapStimTable0] tallyCombinedStimList:nil list1:nil upToFrame:[stimuli targetOnFrame]];

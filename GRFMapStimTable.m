@@ -1008,7 +1008,7 @@ maxTargetS and a long stimLeadMS).
 - (void)updateBlockParameters;
 {
 	NSDictionary *countsDict = (NSDictionary *)[[[task defaults] arrayForKey:@"GRFStimTableCounts"] objectAtIndex:0];
-    BOOL combineStimLists = [[task defaults] boolForKey:GRFConvertToPlaidKey];
+    BOOL combineStimLists = [[task defaults] boolForKey:GRFCombineStimListsKey];
 
 	azimuthCount = [[countsDict objectForKey:@"azimuthCount"] intValue];
 	elevationCount = [[countsDict objectForKey:@"elevationCount"] intValue];

@@ -283,7 +283,7 @@ by mapStimTable.
 	
 // The task stim list is done, now we need to get the mapping stim lists
 
-    combineStimLists = [[task defaults] boolForKey:GRFConvertToPlaidKey];
+    combineStimLists = [[task defaults] boolForKey:GRFCombineStimListsKey];
     if (combineStimLists) {
         [[(GaborRFMap*)task mapStimTable0] makeCombinedMapStimList:mapStimList0 list1:mapStimList1 lastFrame:lastStimOffFrame pTrial:pTrial]; // both mapping lists updated here. No need to worry about mapStimTable1
     }
@@ -893,7 +893,7 @@ by mapStimTable.
 
 - (void)tallyStimLists:(long)count
 {
-    BOOL combineStimLists = [[task defaults] boolForKey:GRFConvertToPlaidKey];
+    BOOL combineStimLists = [[task defaults] boolForKey:GRFCombineStimListsKey];
     
     if (combineStimLists) {
         [[(GaborRFMap *)task mapStimTable0] tallyCombinedStimList:mapStimList0 list1:mapStimList1 count:count];

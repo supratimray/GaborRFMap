@@ -89,6 +89,7 @@ NSString *GRFHideTaskGaborKey = @"GRFHideTaskGabor";
 NSString *GRFIncludeCatchTrialsinDoneListKey = @"GRFIncludeCatchTrialsinDoneList";
 NSString *GRFMapTemporalModulationKey = @"GRFMapTemporalModulation";
 
+NSString *GRFCombineStimListsKey = @"GRFCombineStimLists";
 NSString *GRFConvertToPlaidKey = @"GRFConvertToPlaid";
 NSString *GRFConvertToImageKey = @"GRFConvertToImage";
 NSString *GRFPlayAudStimKey = @"GRFPlayAudStim";

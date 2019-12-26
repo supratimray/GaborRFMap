@@ -252,6 +252,8 @@
 	<false/>
 	<key>GRFConvertToPlaid</key>
 	<false/>
+	<key>GRFCombineStimLists</key>
+	<false/>
 	<key>GRFConvertToImage</key>
 	<false/>
 	<key>GRFConvertToColor</key>
