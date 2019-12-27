@@ -45,7 +45,7 @@ NSString *stimulusMonitorID = @"GaborRFMap Stimulus";
     // Therefore, we cannot release it ourselves
     // Probably it gets properly allocated and initialized only with a valid bitmap data as done in GRFImageStim.m for bmpRep
     
-    [colorSpot release]; // [Vinay] - release the color Spot
+    [colorSpot release]; // [Vinay] - release the color Spot. Color spot is used to present colors in RGB or HSV space
 
     [super dealloc];
 }
@@ -423,7 +423,7 @@ by mapStimTable.
     long index, trialFrame, taskGaborFrame;
 	NSArray *stimLists;
 	StimDesc stimDescs[kGabors], *pSD;
-    AudStimDesc audStim;
+    
 	long stimIndices[kGabors];
 	long stimOffFrames[kGabors];
 	long gaborFrames[kGabors];
@@ -433,9 +433,16 @@ by mapStimTable.
     BOOL useSingleITC18;
     BOOL convertToPlaid;
     BOOL convertToImage;
+    BOOL convertToGrating;
+    BOOL convertOverlappingGaborsToPlaid;
+    BOOL gaborsOverlap = 0;
+    
     // local variables related to auditory stimulus [MD 25/04/2015]
     BOOL playAudStim;
     int kMapGaborAV;
+    AudStimDesc audStim;
+    
+    // local variables related to color and colorGabor stimuli
     BOOL convertToColor;
     NSColor *colorSpotColor = NULL;
     int rgbIndex,colorfactor;
@@ -448,13 +455,12 @@ by mapStimTable.
     CGColorSpaceRef colorSpaceLAB = CGColorSpaceCreateLab(whitepoint, blackpoint, colorRange);
     CGFloat LABa,LABb,LABl,LABalpha;
     CGColorRef colorSpotColorLAB;
-    BOOL convertToGrating,convertToColorGabor;
+    BOOL convertToColorGabor;
     
     //float Rc,Gc,Bc,rgbIndex;
+    
     bool useFewDigitalCodes;
-    
     useFewDigitalCodes = [[task defaults] boolForKey:GRFUseFewDigitalCodesKey];
-    
 	
     threadPool = [[NSAutoreleasePool alloc] init];		// create a threadPool for this thread
 	[LLSystemUtil setThreadPriorityPeriodMS:1.0 computationFraction:0.250 constraintFraction:1.0];
@@ -481,13 +487,27 @@ by mapStimTable.
 
 // Set up the plaid if necessary
 // Instead of showing two gabors, we can "merge" them together and draw a plaid. In that situation, the azimuth, elevation, sigma and radius of MappingGabor0 are used. We simply set the stimTypes of kMapGabor0 and kMapGabor1 to Null so that they are not displayed, and set up the plaid instead. Plaid uses stimOn, stimOff and Frame number (see below) of MappingGabor0.
+
+// Another possibility is that if two Gabors are overlapping in space, they can be converted to a plaid if necessary
     
     convertToPlaid = [[task defaults] boolForKey:GRFConvertToPlaidKey];
+    convertOverlappingGaborsToPlaid = [[task defaults] boolForKey:GRFConvertOverlappingGaborsToPlaidKey];
 
     if (convertToPlaid) {
         [self loadPlaid:plaid withStimDesc0:&stimDescs[kMapGabor0] withStimDesc1:&stimDescs[kMapGabor1]];
         stimDescs[kMapGabor0].stimType=kPlaidStim;
         stimDescs[kMapGabor1].stimType=kPlaidStim;
+    }
+    else if (convertOverlappingGaborsToPlaid) {
+        [self loadPlaid:plaid withStimDesc0:&stimDescs[kMapGabor0] withStimDesc1:&stimDescs[kMapGabor1]]; // load the plaid anyway before the stimulus sequence starts.
+        if ((stimDescs[kMapGabor0].azimuthDeg == stimDescs[kMapGabor1].azimuthDeg) && (stimDescs[kMapGabor0].elevationDeg == stimDescs[kMapGabor1].elevationDeg)) {
+            gaborsOverlap = 1;
+            stimDescs[kMapGabor0].stimType=kPlaidStim;
+            stimDescs[kMapGabor1].stimType=kPlaidStim;
+        }
+        else {
+            gaborsOverlap = 0;
+        }
     }
     
     [plaid store];
@@ -629,6 +649,10 @@ by mapStimTable.
                     [plaid directSetFrame:[NSNumber numberWithLong:gaborFrames[index]]];	// advance for temporal modulation
                     [plaid draw];
                 }
+                else if (convertOverlappingGaborsToPlaid && gaborsOverlap) {
+                    [plaid directSetFrame:[NSNumber numberWithLong:gaborFrames[index]]];	// advance for temporal modulation
+                    [plaid draw];
+                }
                 
                 if (convertToImage && index == kMapGabor0) {
                     [imageStim drawImage];
@@ -759,6 +783,17 @@ by mapStimTable.
                         [self loadPlaid:plaid withStimDesc0:&stimDescs[kMapGabor0] withStimDesc1:&stimDescs[kMapGabor1]];
                         stimDescs[kMapGabor0].stimType=kPlaidStim;
                         stimDescs[kMapGabor1].stimType=kPlaidStim;
+                    }
+                    else if (convertOverlappingGaborsToPlaid) {
+                      if ((stimDescs[kMapGabor0].azimuthDeg == stimDescs[kMapGabor1].azimuthDeg) && (stimDescs[kMapGabor0].elevationDeg == stimDescs[kMapGabor1].elevationDeg)) {
+                            [self loadPlaid:plaid withStimDesc0:&stimDescs[kMapGabor0] withStimDesc1:&stimDescs[kMapGabor1]];
+                            gaborsOverlap = 1;
+                            stimDescs[kMapGabor0].stimType=kPlaidStim;
+                            stimDescs[kMapGabor1].stimType=kPlaidStim;
+                        }
+                        else {
+                            gaborsOverlap = 0;
+                        }
                     }
                     
                     if (convertToImage && index == kMapGabor0) {

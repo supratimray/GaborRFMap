@@ -3062,6 +3062,17 @@
                             <binding destination="498" name="value" keyPath="values.GRFCombineStimLists" id="ctD-T4-a8n"/>
                         </connections>
                     </button>
+                    <button id="Pqw-VO-NQX">
+                        <rect key="frame" x="347" y="170" width="180" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="Overlapping Gabor-&gt;Plaid" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="AYM-RF-e3H">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <binding destination="498" name="value" keyPath="values.GRFConvertOverlappingGaborsToPlaid" id="wcS-Gi-wfA"/>
+                        </connections>
+                    </button>
                 </subviews>
             </view>
         </window>

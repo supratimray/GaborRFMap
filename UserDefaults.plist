@@ -252,6 +252,8 @@
 	<false/>
 	<key>GRFConvertToPlaid</key>
 	<false/>
+	<key>GRFConvertOverlappingGaborsToPlaid</key>
+	<false/>
 	<key>GRFCombineStimLists</key>
 	<false/>
 	<key>GRFConvertToImage</key>

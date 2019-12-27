@@ -246,6 +246,7 @@ extern NSString *GRFHideTaskGaborKey;
 extern NSString *GRFIncludeCatchTrialsinDoneListKey;
 extern NSString *GRFMapTemporalModulationKey;
 
+extern NSString *GRFConvertOverlappingGaborsToPlaidKey;
 extern NSString *GRFCombineStimListsKey;
 extern NSString *GRFConvertToPlaidKey;
 extern NSString *GRFConvertToImageKey;
