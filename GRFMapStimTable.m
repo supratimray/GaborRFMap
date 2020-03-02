@@ -328,7 +328,7 @@ maxTargetS and a long stimLeadMS).
 		}
         
         if (spatialFreqLog) {
-            stimDesc.spatialFreqCPD = [self logValueWithIndex:spatialFreqIndex count:spatialFreqCount min:spatialFreqCPDMin max:spatialFreqCPDMax];
+            stimDesc.spatialFreqCPD = [self contrastValueFromIndex:spatialFreqIndex count:spatialFreqCount min:spatialFreqCPDMin max:spatialFreqCPDMax];
         }
         else {
             stimDesc.spatialFreqCPD = [self linearValueWithIndex:spatialFreqIndex count:spatialFreqCount min:spatialFreqCPDMin max:spatialFreqCPDMax];
@@ -591,7 +591,7 @@ maxTargetS and a long stimLeadMS).
         }
         
         if (spatialFreqLog0) {
-            stimDesc0.spatialFreqCPD = [self logValueWithIndex:spatialFreqIndex0 count:spatialFreqCount min:spatialFreqCPDMin0 max:spatialFreqCPDMax0];
+            stimDesc0.spatialFreqCPD = [self contrastValueFromIndex:spatialFreqIndex0 count:spatialFreqCount min:spatialFreqCPDMin0 max:spatialFreqCPDMax0];
         }
         else {
             stimDesc0.spatialFreqCPD = [self linearValueWithIndex:spatialFreqIndex0 count:spatialFreqCount min:spatialFreqCPDMin0 max:spatialFreqCPDMax0];
@@ -670,7 +670,7 @@ maxTargetS and a long stimLeadMS).
         }
         
         if (spatialFreqLog1) {
-            stimDesc1.spatialFreqCPD = [self logValueWithIndex:spatialFreqIndex1 count:spatialFreqCount min:spatialFreqCPDMin1 max:spatialFreqCPDMax1];
+            stimDesc1.spatialFreqCPD = [self contrastValueFromIndex:spatialFreqIndex1 count:spatialFreqCount min:spatialFreqCPDMin1 max:spatialFreqCPDMax1];
         }
         else {
             stimDesc1.spatialFreqCPD = [self linearValueWithIndex:spatialFreqIndex1 count:spatialFreqCount min:spatialFreqCPDMin1 max:spatialFreqCPDMax1];

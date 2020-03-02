@@ -316,6 +316,10 @@ by mapStimTable.
 	if (pSD->spatialFreqCPD == 0) {					// Change made by Incheol and Kaushik to get gaussians
 		[gabor directSetSpatialPhaseDeg:90.0];
 	}
+    else {
+        [gabor directSetSpatialPhaseDeg:0.0];
+    }
+    
 	[gabor directSetSigmaDeg:pSD->sigmaDeg];		// *** Should be directSetSigmaDeg
 	[gabor directSetRadiusDeg:pSD->radiusDeg];
 	[gabor directSetAzimuthDeg:pSD->azimuthDeg elevationDeg:pSD->elevationDeg];
@@ -572,6 +576,7 @@ by mapStimTable.
                         
                         if (convertToColorGabor) {
                             // [Vinay] color properties from left gabor & the non-color properties from right gabor
+                            theGabor = [gabors objectAtIndex:1];
                             theGabor2 = [gabors objectAtIndex:2];
                             [theGabor2 setAchromatic:NO];
                             [theGabor2 setKdlThetaDeg:([theGabor azimuthDeg])];
