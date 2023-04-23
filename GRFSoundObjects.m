@@ -97,6 +97,9 @@
     else if (protocolType == 3){ // Ripples protocol with varying volume with and without visual stimuli of different contrasts
         [self getVaryingVolumeProtocolSoundForGabor:pSD];
     }
+    else if (protocolType == 4){ // Sinusoidal Amplitude Modulated sounds Protocol
+        [self getSAMProtocolSoundForGaborType4:pSD];
+    }
     else if (protocolType == 10) { // Noise burst protocol
         [self getNoiseProtocolsSoundForGabor:pSD];
     }
@@ -127,6 +130,13 @@
 -(void)getSAMProtocolSoundForGabor:(AudStimDesc)pSD
 {
     int stimType = 2; // SAM sounds
+    soundName = [NSString stringWithFormat:@"Azi_%.1f_%@_%.1f_%@_%.0d_%@_%.1f_%@_%.0f_%@_%.1f_%@_%.1f_%@_%.0d.wav",(pSD.azimuthDeg),@"Elev",(pSD.elevationDeg),@"Type",stimType,@"RF",(pSD.spatialFreqCPD),@"RP",(pSD.directionDeg),@"MD",(pSD.contrastPC/100),@"RV",(pSD.temporalFreqHz),@"Dur",stimulusDuration];
+    stimVolume = 1;
+}
+
+-(void)getSAMProtocolSoundForGaborType4:(AudStimDesc)pSD
+{
+    int stimType = 4; // SAM sounds
     soundName = [NSString stringWithFormat:@"Azi_%.1f_%@_%.1f_%@_%.0d_%@_%.1f_%@_%.0f_%@_%.1f_%@_%.1f_%@_%.0d.wav",(pSD.azimuthDeg),@"Elev",(pSD.elevationDeg),@"Type",stimType,@"RF",(pSD.spatialFreqCPD),@"RP",(pSD.directionDeg),@"MD",(pSD.contrastPC/100),@"RV",(pSD.temporalFreqHz),@"Dur",stimulusDuration];
     stimVolume = 1;
 }

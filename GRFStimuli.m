@@ -299,8 +299,8 @@ by mapStimTable.
         for (stim=0; stim < pTrial->numStim; stim++) {
             [[mapStimList0 objectAtIndex:stim] getValue:&stimDesc];
             
-            imageFile = [[[self getResourcesFolder] stringByAppendingPathComponent:@"Images"] stringByAppendingPathComponent:[NSString stringWithFormat:@"Image%d%s",(int)(stimDesc.spatialFreqCPD),".jpg"]];
-            //imageFile = [[[self getResourcesFolder] stringByAppendingPathComponent:@"Images"] stringByAppendingPathComponent:[NSString stringWithFormat:@"Image%d%s",(int)(stimDesc.spatialFreqCPD),".tif"]];
+            //imageFile = [[[self getResourcesFolder] stringByAppendingPathComponent:@"Images"] stringByAppendingPathComponent:[NSString stringWithFormat:@"Image%d%s",(int)(stimDesc.spatialFreqCPD),".jpg"]];
+            imageFile = [[[self getResourcesFolder] stringByAppendingPathComponent:@"Images"] stringByAppendingPathComponent:[NSString stringWithFormat:@"Image%d%s",(int)(stimDesc.spatialFreqCPD),".tif"]];
             NSLog(@"imageFile is : %@",imageFile);
             
             bmpRep0 = [imageStim getImageStimBitmap:imageFile];
@@ -343,8 +343,8 @@ by mapStimTable.
     ImageParams imageDesc;
     
     imageDesc = [self generateImageDescWithGabor:pSD];
-    imageFile = [[[self getResourcesFolder] stringByAppendingPathComponent:@"Images"] stringByAppendingPathComponent:[NSString stringWithFormat:@"Image%d%s",(int)(pSD->spatialFreqCPD),".jpg"]];
-    //imageFile = [[[self getResourcesFolder] stringByAppendingPathComponent:@"Images"] stringByAppendingPathComponent:[NSString stringWithFormat:@"Image%d%s",(int)(pSD->spatialFreqCPD),".tif"]];
+    //imageFile = [[[self getResourcesFolder] stringByAppendingPathComponent:@"Images"] stringByAppendingPathComponent:[NSString stringWithFormat:@"Image%d%s",(int)(pSD->spatialFreqCPD),".jpg"]];
+    imageFile = [[[self getResourcesFolder] stringByAppendingPathComponent:@"Images"] stringByAppendingPathComponent:[NSString stringWithFormat:@"Image%d%s",(int)(pSD->spatialFreqCPD),".tif"]];
     NSLog(@"imageFile is : %@",imageFile);
     [imageStim setImageStimData:imageDesc];
     [imageStim setImageStim:imageFile];

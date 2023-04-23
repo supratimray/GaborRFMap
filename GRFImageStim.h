@@ -18,6 +18,7 @@ typedef struct {
 	float	azimuthDeg;		// Center of image 
 	float	elevationDeg;	// Center of image 
 	float	sizeDeg;		// size of drawing  (not in the image)
+    float	horiDeg;
 	float	directionDeg;	// direction of drawing  (not in the image)
 } ImageParams;
 
@@ -61,6 +62,7 @@ extern NSString *ImageDirectionDegKey;
 	//float				elevationDeg;
 	float				sizeDeg;
 	float               aspectRatio;
+    float               horiDeg;
 	//float				directionDeg;	
 }
 

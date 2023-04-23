@@ -99,8 +99,9 @@ NSString *ImageSizeDegKey = @"sizeDeg";
     
     // [Vinay] - compute the aspect ratio and draw the stimulus as per the original aspect ratio
     // float *aspectRatio;
-    aspectRatio = (float)imgWidth/(float)imgHeight;
-
+    //aspectRatio = (float)imgWidth/(float)imgHeight;
+    aspectRatio = 20.9/11.8; // This information is available in LLDisplayPhysical and can be taken from there. For now, it is hardcoded.
+    horiDeg = 2*((180*atan(aspectRatio*tan(M_PI*sizeDeg/360)))/M_PI);
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_TEXTURE_RECTANGLE_EXT);
@@ -120,7 +121,7 @@ NSString *ImageSizeDegKey = @"sizeDeg";
 		glTexCoord2f(0.0, imgHeight); 
 		glVertex2f(azimuthDeg + sizeDeg/2, elevationDeg - sizeDeg/2);
         */
-    
+        /*
         glTexCoord2f(0.0, 0.0);
         glVertex2f(azimuthDeg - (aspectRatio * sizeDeg)/2, elevationDeg + sizeDeg/2);
         glTexCoord2f(imgWidth, 0.0);
@@ -129,6 +130,16 @@ NSString *ImageSizeDegKey = @"sizeDeg";
         glVertex2f(azimuthDeg + (aspectRatio * sizeDeg)/2, elevationDeg - sizeDeg/2);
         glTexCoord2f(0.0, imgHeight);
         glVertex2f(azimuthDeg - (aspectRatio * sizeDeg)/2, elevationDeg - sizeDeg/2);
+        */
+    
+        glTexCoord2f(0.0, 0.0);
+        glVertex2f(azimuthDeg - (horiDeg)/2, elevationDeg + sizeDeg/2);
+        glTexCoord2f(imgWidth, 0.0);
+        glVertex2f(azimuthDeg + (horiDeg)/2, elevationDeg + sizeDeg/2);
+        glTexCoord2f(imgWidth, imgHeight);
+        glVertex2f(azimuthDeg + (horiDeg)/2, elevationDeg - sizeDeg/2);
+        glTexCoord2f(0.0, imgHeight);
+        glVertex2f(azimuthDeg - (horiDeg)/2, elevationDeg - sizeDeg/2);
     
 	glEnd();
 	glDisable(GL_TEXTURE_RECTANGLE_EXT);
